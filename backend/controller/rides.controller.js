@@ -3,7 +3,7 @@ import Ride from "../models/rides.model";
 import User from "../models/user.model";
 
 export const bookRide = async (req,res) => {
-    const {pickup,destination,fare,driverId} = req.body
+    const {pickupLong,pickupLat,destinationLong,destinationLat,fare,driverId} = req.body
     const userId = req.user._id
     try {
         const user = await User.findById(userId)
@@ -14,8 +14,8 @@ export const bookRide = async (req,res) => {
 
         const newRide = new Ride({
             userId,
-            pickup,
-            destination,
+            pickup : {type : 'Point', coordinates : [{pickupLong},{pickupLat}]},
+            destination : {type : 'Point', coordinates : [{destinationLong},{destinationLat}]},
             fare,
             driverId
         })
