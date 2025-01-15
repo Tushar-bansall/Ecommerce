@@ -9,4 +9,6 @@ router.post("/book",protectRoute,bookRide)
 
 router.get("/rides",protectRoute,getRides)
 
-router.get("/drivers",getDrivers)
+router.put("/drivers",getDrivers)
+
+export default router

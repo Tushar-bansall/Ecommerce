@@ -31,14 +31,14 @@ const RidesPage = () => {
             <tbody>
             {
                 rides.map((ride)=>(
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                    <tr key={ride._id}>
+                        <td>ride.userId.fullName</td>
+                        <td>ride.driverId.fullName</td>
+                        <td>ride.driverId.phoneNo</td>
+                        <td>ride.driverId.vehicle</td>
+                        <td>ride.pickup</td>
+                        <td>ride.destination</td>
+                        <td>ride.fare</td>
                     </tr>
                 ))
             }

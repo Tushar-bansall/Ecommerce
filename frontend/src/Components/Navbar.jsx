@@ -1,4 +1,4 @@
-import { useAuthStore } from "../store/useAuthStore"
+import { useAuthStore } from "../store/authStore"
 import { Link, useLocation } from "react-router-dom"
 
 
@@ -58,7 +58,7 @@ const Navbar = () => {
   const currentURL = location.pathname; // Get the current path
 
   return (
-      <div className="navbar hidden md:flex bg-gray-800 gap-5">
+      <div className="navbar hidden md:flex bg-gray-800 gap-5 ">
         <div className="flex-1">
           <Link to="/" className="btn btn-ghost btn-md text-xl"><img src="logo.png" className='w-15 h-10 '/></Link>
         </div>

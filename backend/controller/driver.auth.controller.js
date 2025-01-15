@@ -117,7 +117,8 @@ export const checkAuth = (req,res) => {
 
 export const getRides = async (req,res) => {
     try {
-        const rides = await Ride.find({driverId : {$in : [req.user._id]}})
+        const rides = await Ride.find({driverId : {$in : [req.user._id]}}).populate('userId','fullName')
+        rides.populate('driverId','fullName phoneNo vehicle')
         res.status(200).json(rides)
         
     } catch (error) {
@@ -132,7 +133,7 @@ export const updateLocation = async (req,res) => {
         const {latitude,longitude} = req.body
 
         const newDriver = await Driver.findByIdAndUpdate(driverId,{location :{
-            type:'Point',coordinates: [longitude,latitude]}},{new: true})
+            type:'Point',coordinates: [latitude,longitude]}},{new: true})
         res.status(200).json(newDriver)
     } catch (error) {
         console.log("Error in updateLocation controller",error.message)

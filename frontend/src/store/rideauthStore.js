@@ -5,6 +5,11 @@ import { axiosInstance } from "../lib/axios";
 export const useRideStore = create((set,get) => ({
     rides: [],
     drivers: [],
+    markers: [],
+    addMarkers : (data) => set({markers: [...get().markers,data]}),
+    
+    location : {latitude: 28.4750063,longitude: 77.0103535},
+    setLocation : (data) => set({location : data}),
 
     getDriverRides : async () => {
         try {
@@ -24,10 +29,13 @@ export const useRideStore = create((set,get) => ({
         } 
     },
 
-    getDrivers: async(data) => {
+    getDrivers: async() => {
         try {
-            const res= await axiosInstance.get("/api/ride/drivers",data)
+            const res= await axiosInstance.put("/api/ride/drivers",get().location)
             set({drivers:res.data})
+            set({markers : drivers.map((driver)=>{(
+                        driver.location.coordinates
+            )} )})
         } catch (error) {
             toast.error(error.response.data.message)
         }

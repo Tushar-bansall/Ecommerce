@@ -7,26 +7,13 @@ const rideSchema = new mongoose.Schema({
         required : true
     },
     pickup :{
-        type : {
-            type: String,
-            enum: ['Point'],
-            required: true
-        },
-        coordinates: {
-            type : [Number],
-            required: true
-        }
+        type : String,
+        required: true
     },
+    
     destination :{
-        type : {
-            type: String,
-            enum: ['Point'],
-            required : true
-        },
-        coordinates: {
-            type : [Number],
-            required: true
-        }
+        type : String,
+        required: true
     },
     fare : {
         type: Number,

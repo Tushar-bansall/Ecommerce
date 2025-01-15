@@ -2,6 +2,8 @@ import express from "express"
 import { config } from "dotenv"
 import cors from "cors"
 import authRoutes from "./routes/auth.route.js"
+import driverRoutes from "./routes/driver.auth.route.js"
+import rideRoutes from "./routes/ride.route.js"
 import { connectDB } from "./lib/db.js"
 import cookieParser from "cookie-parser"
 
@@ -19,6 +21,8 @@ app.use(cors({
     credentials: true,  // Allow credentials (cookies, headers)
   }))
 app.use("/api/auth",authRoutes)
+app.use("/api/driver",driverRoutes)
+app.use("/api/ride",rideRoutes)
 
 app.listen(process.env.PORT,()=> 
     {
