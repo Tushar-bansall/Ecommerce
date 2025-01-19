@@ -4,6 +4,9 @@ import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { useRideStore} from '../store/rideauthStore'
 
+import { LatLngBounds } from 'leaflet';
+
+
 
 
 delete L.Icon.Default.prototype._getIconUrl
@@ -35,9 +38,32 @@ const Map = (props) => {
     
         return null
       }
-        console.log(props.route);
+      let bounds
+
+      if (props.pickupcoordinates && props.destinationcoordinates)
+      {
+        
+        bounds = new LatLngBounds([[props.pickupcoordinates.latitude,props.pickupcoordinates.longitude], [props.destinationcoordinates.latitude,props.destinationcoordinates.longitude]]);
+
+      }
+
+      const FitBounds = () => {
+        const map = useMap();
+        useEffect(() => {
+          if(props.pickupcoordinates && props.destinationcoordinates)
+          {
+            map.fitBounds(bounds,{
+              padding:[10,10]
+            });
+          }
+
+        }, [map, bounds]);
+    
+        return null;
+      };
+
   return (
-    <MapContainer className='absolute inset-0 z-0' center ={[location.latitude,location.longitude]} zoom={14} >
+    <MapContainer ref={props.mapRef} className='absolute inset-0 z-0' center ={[location.latitude,location.longitude]} zoom={14} scrollWheelZoom={true}>
         <TileLayer url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">openstreetmap</a> contributors' />
         <UpdateMapCenter />
@@ -56,6 +82,7 @@ const Map = (props) => {
                 </Marker>
             ))
         }
+        <FitBounds />
     </MapContainer>
   )
 }

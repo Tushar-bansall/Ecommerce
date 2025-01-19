@@ -22,7 +22,16 @@ const rideSchema = new mongoose.Schema({
         type : mongoose.Schema.Types.ObjectId,
         ref : "Driver",
         required: true
+    },
+    vehicle : {
+        type: String,
+        required: true
+    },
+    map : {
+        type: String,
+        required: true
     }
+
 },{timestamps: true})
 
 const Ride = mongoose.model("Ride",rideSchema)

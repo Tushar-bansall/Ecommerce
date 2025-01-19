@@ -50,4 +50,13 @@ export const useRideStore = create((set,get) => ({
             toast.error(error.response.data.message)
         }
     },
+    selectDriver : (vehicle) => {
+        try {
+            const filteredDrivers = get().drivers.filter((driver)=>driver.vehicle === vehicle)
+            const randomIndex = Math.floor(Math.random() * filteredDrivers.length);
+            return filteredDrivers[randomIndex]
+        } catch (error) {
+            return null
+        }
+    }
 }))

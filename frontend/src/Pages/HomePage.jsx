@@ -1,69 +1,90 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,useRef } from 'react';
 import { useRideStore } from '../store/rideauthStore';
 import Map from '../Components/map';
+import RateList from '../Components/RateList';
+import { axiosInstance } from "../lib/axios";
+
 
 const HomePage = () => {
 
-  const { setLocation, getDrivers, addMarkers } = useRideStore();
-
-  navigator.geolocation.getCurrentPosition((position) => {
-    const { latitude, longitude } = position.coords;
-    setLocation({ latitude, longitude });
-  });
-
-  useEffect(() => {
-    getDrivers();
-  }, [getDrivers]);
-
+  const { location,setLocation, getDrivers, addMarkers,bookRide, selectDriver } = useRideStore();
   const [pickup, setPickup] = useState();
   const [destination, setDestination] = useState();
   const [destinationcoordinates, setdestinationcoordinates] = useState(null);
-  const [pickupcoordinates, setpickupcoordinates] = useState(null);
+  const [pickupcoordinates, setpickupcoordinates] = useState(location);
   const [pickupDropdown, setpickupDropdown] = useState(null);
   const [destinationDropdown, setdestinationDropdown] = useState(null);
   const [route, setRoute] = useState(null);
+  const [distTime,setdistTime] = useState(null)
+  const [selectedVehicle,setSelectedVehicle] = useState(null)
+  const mapRef = useRef();
 
-  const handlePickup = (e) => {
+  useEffect(()=>
+    navigator.geolocation.getCurrentPosition((position) => {
+      const { latitude, longitude } = position.coords;
+      setLocation({ latitude, longitude });
+    }),[])
+
+  const handlePickup = async (e) => {
     setPickup(e.target.value);
-    fetch(
-      `https://api.geoapify.com/v1/geocode/autocomplete?text=${e.target.value}&filter=countrycode:auto&format=json&apiKey=e7577bb5d1164c42ba9b89490328ebc2`,
-      {
-        method: 'GET',
-      }
-    )
-      .then((response) => response.json())
-      .then((result) => {
-        setpickupDropdown(result.results);
-      })
-      .catch((error) => console.log('error', error));
+    
+    const res = await axiosInstance.put("/api/ride/pickup",{
+      pickup : e.target.value
+    })
+        setpickupDropdown(res.data);
+      
   };
 
   const handleDestination = async (e) => {
     setDestination(e.target.value);
-    fetch(
-      `https://api.geoapify.com/v1/geocode/autocomplete?text=${e.target.value}&filter=countrycode:auto&format=json&apiKey=e7577bb5d1164c42ba9b89490328ebc2`,
-      {
-        method: 'GET',
-      }
-    )
-      .then((response) => response.json())
-      .then((result) => {
-        setdestinationDropdown(result.results);
-      })
-      .catch((error) => console.log('error', error));
+    const res = await axiosInstance.put("/api/ride/destination",{
+      Destination : e.target.value
+    })
+        setdestinationDropdown(res.data);
   };
 
-  const handleRoute = () => {
+  const handleRoute = async () => {
     if (pickupcoordinates && destinationcoordinates) {
-      fetch(
-        `https://api.geoapify.com/v1/routing?waypoints=${pickupcoordinates.latitude}%2C${pickupcoordinates.longitude}%7C${destinationcoordinates.latitude}%2C${destinationcoordinates.longitude}&mode=drive&apiKey=00ffce3bd27844caae8c8117f548412c`,
-        { method: 'GET' }
-      )
-        .then((response) => response.json())
-        .then((result) => setRoute(result.features[0].geometry.coordinates[0]))
-        .catch((error) => console.log('error', error));
+      const res = await axiosInstance.put("/api/ride/route",{
+        pickupcoordinates: pickupcoordinates,
+        destinationcoordinates: destinationcoordinates
+      })
+        setdistTime({
+          distance:res.data.properties.distance,
+          time:res.data.properties.time
+        })
+        setRoute(res.data.geometry.coordinates[0])
+      
     }
   };
+
+
+  const handleBooking = (e) => {
+    e.preventDefault()
+    const driver = selectDriver(selectedVehicle.vehicle)
+    let imageUrl
+    html2canvas(mapRef.current).then((canvas) =>{
+      imageUrl = canvas.toDataURL('image/png')});
+    if(driver)
+      {bookRide({
+        pickup: pickup,
+        destination: destination,
+        vehicle : selectedVehicle.vehicle,
+        fare : selectedVehicle.fare,
+        driverId: driver._id,
+        image: imageUrl
+      })
+    }
+    else {
+      console.log("Not available");
+      setSelectedVehicle(null)
+    }
+  }
+
+  
+  useEffect(() => {
+    getDrivers();
+  }, [getDrivers,location]);
 
   // Trigger route calculation only when destinationcoordinates or pickupcoordinates change
   useEffect(() => {
@@ -73,9 +94,10 @@ const HomePage = () => {
   }, [pickupcoordinates, destinationcoordinates]);
 
   return (
+    <div className='flex flex-col md:flex-row'>
     <div className='relative h-[calc(86vh)]  w-screen'>
-      <Map route={route} />
-      <form className='relative z-10 text-white text-lg font-bold flex flex-col text-center items-center justify-center gap-[calc(70vh)]'>
+      <Map mapRef={mapRef} route={route} pickupcoordinates={pickupcoordinates} destinationcoordinates={destinationcoordinates}/>
+      {!selectedVehicle && <form className='relative z-10 text-white text-lg font-bold flex flex-col text-center items-center justify-center gap-[calc(70vh)]'>
         <div className='dropdown dropdown-bottom'>
           <label className='flex items-center gap-4 h-12 md:h-18 bg-gray-900 p-1.5 md:p-3 w-fit'>
             <span className='label-text font-bold text-base md:text-lg text-emerald-400'>Pickup</span>
@@ -97,13 +119,13 @@ const HomePage = () => {
                 <li
                   key={index}
                   onClick={() => {
-                    setPickup(item.address_line1 + item.address_line2);
+                    setPickup(item.address_line1 + "," + item.address_line2);
                     setLocation({ latitude: item.lat, longitude: item.lon });
                     addMarkers([item.lat, item.lon]);
                     setpickupcoordinates({ latitude: item.lat, longitude: item.lon });
                   }}
                 >
-                  {item.address_line1}
+                  {item.address_line1},
                   {item.address_line2}
                 </li>
               ))}
@@ -130,7 +152,7 @@ const HomePage = () => {
                 <li
                   key={index}
                   onClick={() => {
-                    setDestination(item.address_line1 + item.address_line2);
+                    setDestination(item.address_line1 + "," + item.address_line2);
                     addMarkers([item.lat, item.lon]);
                     setdestinationcoordinates({ latitude: item.lat, longitude: item.lon });
                   }}
@@ -140,7 +162,37 @@ const HomePage = () => {
               ))}
           </ul>
         </div>
-      </form>
+      </form>}
+    </div>
+    {route && (selectedVehicle 
+      ? 
+        <form onSubmit={handleBooking} className='rounded-box bg-zinc-900 w-full md:w-[calc(40vw)] p-6 flex flex-col gap-7'>
+          <label className="input input-bor
+          dered flex items-center gap-3 text-emerald-400">
+            Pickup
+            <input type="text" className="disabled:" value={pickup} />
+          </label>
+          <label className="input input-bordered flex items-center gap-3 text-red-400">
+            Destination
+            <input type="text" className="disabled:" value={destination} />
+          </label>
+          <label className="input input-bordered flex items-center gap-3">
+            Vehicle
+            <input type="text" className="disabled:" value={selectedVehicle.vehicle} />
+          </label>
+          <label className="input input-bordered flex items-center gap-3">
+            Fare
+            <input type="text" className="disabled:" value={`₹ ${selectedVehicle.fare}`} />
+          </label>
+          <label className="input input-bordered flex items-center gap-3">
+            Coupon
+            <input type="text" className="grow" placeholder="Enter a valid coupon code" />
+          </label>
+            <button type='submit' className='btn btn-md btn-info btn-outline w-44'>Book Ride</button>
+          
+        </form>
+      : 
+        <RateList {...distTime} function={setSelectedVehicle} />)}
     </div>
   );
 };
