@@ -95,7 +95,7 @@ const HomePage = () => {
 
   return (
     <div className='flex flex-col md:flex-row'>
-    <div className='relative h-[calc(86vh)]  w-screen'>
+    <div className='relative h-[calc(86vh)] w-[calc(96vw)] md:w-screen'>
       <Map mapRef={mapRef} route={route} pickupcoordinates={pickupcoordinates} destinationcoordinates={destinationcoordinates}/>
       {!selectedVehicle && <form className='relative z-10 text-white text-lg font-bold flex flex-col text-center items-center justify-center gap-[calc(70vh)]'>
         <div className='dropdown dropdown-bottom'>
@@ -166,7 +166,7 @@ const HomePage = () => {
     </div>
     {route && (selectedVehicle 
       ? 
-        <form onSubmit={handleBooking} className='rounded-box bg-zinc-900 w-full md:w-[calc(40vw)] p-6 flex flex-col gap-7'>
+        <form onSubmit={handleBooking} className='rounded-box bg-zinc-900 w-full md:w-[calc(40vw)] p-6 flex flex-col gap-7 mb-14 md:mb-0'>
           <label className="input input-bor
           dered flex items-center gap-3 text-emerald-400">
             Pickup
@@ -188,7 +188,7 @@ const HomePage = () => {
             Coupon
             <input type="text" className="grow" placeholder="Enter a valid coupon code" />
           </label>
-            <button type='submit' className='btn btn-md btn-info btn-outline w-44'>Book Ride</button>
+            <button type='submit' className='btn btn-info btn-outline '>Book Ride</button>
           
         </form>
       : 

@@ -63,7 +63,7 @@ const Map = (props) => {
       };
 
   return (
-    <MapContainer ref={props.mapRef} className='absolute inset-0 z-0' center ={[location.latitude,location.longitude]} zoom={14} scrollWheelZoom={true}>
+    <MapContainer ref={props.mapRef} className='absolute inset-0 z-0' center ={[location.latitude,location.longitude]} zoom={14} scrollWheelZoom={false}>
         <TileLayer url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">openstreetmap</a> contributors' />
         <UpdateMapCenter />

@@ -3,7 +3,7 @@ import React from 'react'
 const RateList = (props) => {
 
   return (
-        <ul className="rounded-box bg-zinc-900 w-full md:w-[calc(40vw)] p-5">
+        <ul className="rounded-box bg-zinc-900 w-full md:w-[calc(40vw)] p-4 mb-14 md:mb-0">
             <li className='cursor-pointer' onClick={()=>props.function({
                 vehicle: "Bike",
                 fare: (20+(props.distance*5)/1000+(props.time*1)/60).toFixed(2)

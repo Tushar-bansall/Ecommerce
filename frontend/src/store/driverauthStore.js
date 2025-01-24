@@ -7,11 +7,10 @@ export const useDriverAuthStore = create( (set,get) => ({
     authDriver : null,
     isSigningUp : false,
     isLoggingIn : false,
+    isCheckingDriverAuth:true,
     isUpdatingLocation : false,
     onlineDrivers: [],
 
-    
-    setAuthDriver : (Driver) => set({authDriver:Driver}),
     
     checkDriverAuth : async() => {
         try {
@@ -20,6 +19,8 @@ export const useDriverAuthStore = create( (set,get) => ({
         } catch (error) {
             console.log("Error in checkAuth", error.message);
             set({authDriver: null})
+        } finally{
+            set({isCheckingDriverAuth:false})
         }
     },
     signup : async (data) => {

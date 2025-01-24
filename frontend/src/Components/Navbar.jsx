@@ -1,4 +1,4 @@
-import { useAuthStore } from "../store/authStore"
+import { useAuthStore } from "../store/useAuthStore"
 import { Link, useLocation } from "react-router-dom"
 
 
@@ -58,87 +58,17 @@ const Navbar = () => {
   const currentURL = location.pathname; // Get the current path
 
   return (
-      <div className="navbar hidden md:flex bg-gray-800 gap-5 ">
-        <div className="flex-1">
-          <Link to="/" className="btn btn-ghost btn-md text-xl"><img src="logo.png" className='w-15 h-10 '/></Link>
-        </div>
-        {authUser && 
-          <div>
-          <button className="btn btn-xs sm:btn-md btn-ghost btn-circle">
-            <div className="indicator">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-              </svg>
-              <span className="badge badge-xs indicator-item badge-info">3</span>
-            </div>
-          </button>
-          <Link to={"/users"} className="btn btn-ghost btn-circle btn-md " >
-            <svg xmlns="http://www.w3.org/2000/svg" className='w-6 h-6' shape-rendering="geometricPrecision" text-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd" clip-rule="evenodd" viewBox="0 0 512 512"><path fill="#10A64A" d="M256 0c141.387 0 256 114.614 256 256 0 141.387-114.613 256-256 256C114.614 512 0 397.387 0 256 0 114.614 114.614 0 256 0zm122.257 255.999v.004c0 12.532-10.321 22.794-22.79 22.794h-76.671v79.628c0 12.531-10.266 22.79-22.794 22.79h-.004c-12.531 0-22.793-10.324-22.793-22.79v-79.628h-76.668c-12.469 0-22.794-10.316-22.794-22.794v-.004c0-12.478 10.257-22.793 22.794-22.793h76.668V153.58c0-12.466 10.319-22.793 22.793-22.793h.004c12.475 0 22.794 10.258 22.794 22.793v79.626h76.671c12.533 0 22.79 10.267 22.79 22.793z"/></svg>        
-          </Link>
-          </div>
-        }
-          <form class=" max-w-[calc(60vw)] ">   
-              <div class="relative">
-                  <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block sm:ps-10 p-0.5 sm:p-1.5 md:p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search for friends" />                  
-              </div>
-          </form>
-          
-
-          
-            {authUser ?
-              <div className="dropdown dropdown-end  mr-3">
-                
-                <div tabIndex={0} role="button" className="btn btn-md btn-circle avatar btn-ghost">
-                  <div className=" rounded-full">
-                    <img
-                      alt="Tailwind CSS Navbar component"
-                      src={authUser.profilePicture || "user.png"}
-                      />
-                  </div>
-                </div>
-                
-                <ul
-                  tabIndex={0}
-                  className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-44 sm:w-52 p-2 shadow">
-                  <li>{ currentURL === "/profile" ?
-                    <Link to={"/"} className="justify-between">
-                      Home
-                      <span className="badge">New</span>
-                    </Link>
-                    :
-                    <Link to={"/profile"} className="justify-between">
-                      Profile
-                      <span className="badge">New</span>
-                    </Link>
-                  }
-                  </li>
-                  <li>
-                  { currentURL === "/settings" ?
-                    <Link to={"/"} className="justify-between">
-                      Home
-                    </Link>
-                    :
-                    <Link to={"/settings"} className="justify-between">
-                      Settings
-                    </Link>
-                  }
-                  </li>
-                  <li><span onClick={logout}>Logout</span></li>
-                </ul>
-              </div>
-            :
-              navbarbutton()
-            }
-      </div>
+    <div className="navbar bg-gray-800 w-full hidden md:flex text-white text-2xl">
+    <div className="mx-2 flex-1 px-2">ZappCab</div>
+    <div className="block">
+      <ul className="menu menu-horizontal">
+        {/* Navbar menu content here */}
+        <li><a href="/profile">Profile</a></li>
+        <li><a href="/rides">Rides</a></li>
+        <li onClick={logout}><a href="/login">Logout</a></li>
+      </ul>
+    </div>
+  </div>
   )
 }
 

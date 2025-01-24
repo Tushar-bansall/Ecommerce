@@ -1,14 +1,31 @@
-import React from 'react'
-import { useAuthStore } from '../store/authStore'
+import React, { useEffect } from 'react'
+import { useAuthStore } from '../store/useAuthStore.js'
 import {Link} from 'react-router-dom'
 
 const LoginPage = () => {
+  
+  
+  const {login, isLoggingIn,handleCredentialResponse} = useAuthStore()
+  
+  window.handleCredentialResponse= handleCredentialResponse
+
   const [formData,setformData] = React.useState({
     email:"",
     password:""
   })
-  
-  const {login, isLoggingIn} = useAuthStore()
+
+  useEffect(()=>{
+    const script = document.createElement("script")
+    script.src="https://accounts.google.com/gsi/client"
+    script.async=true
+    script.defer = true
+    document.body.appendChild(script)
+
+    return ()=>{
+      document.body.removeChild(script)
+
+    }
+  },[])
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -69,6 +86,18 @@ const LoginPage = () => {
 
         </div>
       </div>
+      <div id="g_id_onload"
+        data-client_id="127607273969-unke3e8nevhb40vqdvg3u9q1aq1ce5u9.apps.googleusercontent.com"
+        data-callback="handleCredentialResponse"
+        data-auto_prompt = "false"></div>
+      <div className="g_id_signin"
+        data-type="standard"
+        data-shape="rectangular"
+        data-theme="outline"
+        data-text="sign_in_with"
+        data-size="large"
+        data-logo_alignment="left"></div>
+
     </div>
 
   )

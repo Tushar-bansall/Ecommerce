@@ -1,11 +1,11 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { useAuthStore } from '../store/authStore.js'
+import { useAuthStore } from '../store/useAuthStore.js'
 
 const BottomNavbar = () => {
     const {logout,authUser} = useAuthStore()
   return (
-    <div className="btm-nav md:hidden justify-evenly flex items-center bg-gray-800">
+    <div className="btm-nav  justify-evenly flex md:hidden items-center bg-gray-800">
       {authUser &&  <Link to="/" className=" flex justify-center items-center">
             <svg
             xmlns="http://www.w3.org/2000/svg"

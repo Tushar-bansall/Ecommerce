@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { useAuthStore } from '../store/authStore'
+import { useAuthStore } from '../store/useAuthStore'
 import { useDriverAuthStore } from '../store/driverauthStore'
 import { useRideStore } from '../store/rideauthStore'
 

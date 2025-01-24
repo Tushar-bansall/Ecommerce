@@ -6,18 +6,17 @@ import toast from "react-hot-toast";
 export const useAuthStore = create( (set,get) => ({
     authUser : null,
     isSigningUp : false,
+    isCheckingAuth : true,
     isLoggingIn : false,
-    
-    setAuthUser : (user) => set({authUser:user}),
-
     checkAuth : async() => {
         try {
             const res = await axiosInstance.get("/api/auth/check");
             set({authUser: res.data})
         } catch (error) {
             console.log("Error in checkAuth", error.message);
-            set({authUser: null})
-        } 
+        } finally {
+            set({isCheckingAuth: false})
+        }
     },
     signup : async (data) => {
         set({isSigningUp: true})
@@ -51,5 +50,22 @@ export const useAuthStore = create( (set,get) => ({
         } finally {
             set({isLoggingIn : false})
         }
-    }
+    },
+    handleCredentialResponse : async (response) => {
+    
+        const id_token = response.credential;
+        try {
+            const res= await axiosInstance.post("/api/auth/google",{
+                id_token: id_token
+            })
+            
+            set({authUser:res.data})            
+            toast.success("Logged In Successfully")
+
+        } catch (error) {
+            console.log("Error in checkAuth", error.message);
+            set({authUser: null})
+        }
+    },
+
 }))

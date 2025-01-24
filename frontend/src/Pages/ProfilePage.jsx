@@ -1,9 +1,10 @@
-import React from 'react'
-import { useAuthStore } from '../store/authStore'
+import React,{useEffect} from 'react'
+import { useAuthStore } from '../store/useAuthStore.js'
 
 const ProfilePage = () => {
 
   const {authUser} = useAuthStore()
+
 
   return (
     <div className=" bg-[url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTuJAmi3fHHjog92eHrAEgbL6Y_qe7J_bJdxg&s)] bg-cover flex items-center justify-center h-[calc(100vh-10rem)] sm:h-[calc(100vh-5rem)]">
