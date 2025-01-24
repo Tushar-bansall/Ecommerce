@@ -7,7 +7,7 @@ import { axiosInstance } from "../lib/axios";
 
 const HomePage = () => {
 
-  const { location,setLocation, getDrivers, addMarkers,bookRide, selectDriver } = useRideStore();
+  const { location,setLocation, getDrivers, addMarkers,bookRide, selectDriver,Payment,PaymentConfirm } = useRideStore();
   const [pickup, setPickup] = useState();
   const [destination, setDestination] = useState();
   const [destinationcoordinates, setdestinationcoordinates] = useState(null);
@@ -61,11 +61,14 @@ const HomePage = () => {
 
   const handleBooking = (e) => {
     e.preventDefault()
-    const driver = selectDriver(selectedVehicle.vehicle)
+    Payment(selectedVehicle.fare)
+    if(PaymentConfirm)
+    {const driver = selectDriver(selectedVehicle.vehicle)
     let imageUrl
-    html2canvas(mapRef.current).then((canvas) =>{
-      imageUrl = canvas.toDataURL('image/png')});
     if(driver)
+    {
+      html2canvas(mapRef.current).then((canvas) =>{
+      imageUrl = canvas.toDataURL('image/png')});
       {bookRide({
         pickup: pickup,
         destination: destination,
@@ -74,11 +77,11 @@ const HomePage = () => {
         driverId: driver._id,
         image: imageUrl
       })
-    }
+    }}
     else {
       console.log("Not available");
       setSelectedVehicle(null)
-    }
+    }}
   }
 
   

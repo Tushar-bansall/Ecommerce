@@ -3,8 +3,15 @@ import Ride from "../models/rides.model.js";
 import User from "../models/user.model.js";
 import {config} from "dotenv"
 import cloudinary from "../lib/cloudinary.js";
+import Razorpay from "razorpay"
+import crypto from "crypto"
 
 config()
+
+const razorpay = new Razorpay({
+  key_id: process.env.RZP_KEY_ID,  // Replace with your Razorpay Key ID
+  key_secret: process.env.RZP_KEY_SECRET,  // Replace with your Razorpay Key Secret
+});
 
 export const bookRide = async (req,res) => {
     const {pickup,destination,fare,driverId,vehicle,image} = req.body
@@ -191,4 +198,42 @@ export const getDestination = async (req, res) => {
       return res.status(500).json({ message: 'Internal Server Error' });
     }
   };
+
+export const Pay =  async (req, res) => {
+  const options = {
+    amount: req.body.amount * 100,
+    currency: "INR",
+    receipt: "order_rcptid_11",
+  };
+
+  try {
+    const response = await razorpay.orders.create(options);
+    res.status(201).json({
+      id: response.id,
+    });
+  } catch (error) {
+    res.status(500).send({ error: error.message });
+  }
+}
+
+export const Verify = async (req, res) => {
+  const { payment_id, order_id, signature } = req.body;
+  try {
+    const generated_signature = crypto
+    .createHmac('sha256', process.env.RZP_KEY_SECRET)
+    .update(order_id + "|" + payment_id)
+    .digest('hex');
+
+    if (generated_signature===signature) {
+      res.status(200).json({ success: true });
+    } else {
+      res.status(400).json({
+        success: false,
+        error: 'Invalid signature',
+      });
+  }
+  } catch (error) {
+    res.status(500).json({message:"Internal Server Error"})
+  }
+  }
   
