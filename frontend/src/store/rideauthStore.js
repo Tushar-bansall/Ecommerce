@@ -6,8 +6,6 @@ export const useRideStore = create((set,get) => ({
     rides: [],
     drivers: [],
     markers: [],
-    PaymentConfirm:false,
-    addMarkers : (data) => set({markers: [...get().markers,data]}),
     
     location : {latitude: 28.4750063,longitude: 77.0103535},
     setLocation : (data) => set({location : data}),
@@ -34,11 +32,11 @@ export const useRideStore = create((set,get) => ({
         try {
             const res= await axiosInstance.put("/api/ride/drivers",get().location)
             set({drivers:res.data})
-            set({markers : drivers.map((driver)=>{(
-                        driver.location.coordinates
-            )} )})
+            console.log(get().drivers);
+            set({markers: get().drivers.map((driver)=>driver.location.coordinates)})
+            console.log(get().markers);
         } catch (error) {
-            toast.error(error.response.data.message)
+            console.log(error)
         }
     },
 
@@ -46,6 +44,7 @@ export const useRideStore = create((set,get) => ({
         const {rides} = get()
         try {
             const res = await axiosInstance.post("/api/ride/book",data)
+            console.log(res.data)
             set({rides : [...rides,res.data]})
         } catch (error) {
             toast.error(error.response.data.message)
@@ -53,59 +52,72 @@ export const useRideStore = create((set,get) => ({
     },
     selectDriver : (vehicle) => {
         try {
+            console.log(get().drivers);
             const filteredDrivers = get().drivers.filter((driver)=>driver.vehicle === vehicle)
-            const randomIndex = Math.floor(Math.random() * filteredDrivers.length);
-            return filteredDrivers[randomIndex]
+            console.log(filteredDrivers);
+            const select = filteredDrivers[0]
+            console.log(select);
+            return select
         } catch (error) {
-            return null
+            toast.error(error.response.data.message)
         }
     },
-    Payment : async(amount) => {
-        // Fetch the order ID from your backend
-        const orderResponse = await axiosInstance.post('/api/ride/payment',{ amount: amount })
-        const razorpayOrderId = orderResponse.data.id;
-    
-        const options = {
-          key: 'rzp_test_65l34p9RqWEeq9', // Replace with your Razorpay Key ID
-          amount: amount * 100, // Amount in paise
-          currency: "INR",
-          name: "ZappCab",
-          description: "Payment for Ride",
-          order_id: razorpayOrderId, // Get the order_id from the backend
-          handler: async function(response) {
-            const { razorpay_payment_id, razorpay_order_id, razorpay_signature } = response;
-
-            // Send these details to your backend for verification
-            const verificationResponse = await axiosInstance.post('/api/ride/verify-payment', {
-                payment_id:razorpay_payment_id,
-                order_id:razorpay_order_id,
-                signature:razorpay_signature,
+    Payment : async (amount) => {
+        return new Promise((resolve, reject) => {
+          // Fetch the order ID from your backend
+          axiosInstance.post('/api/ride/payment', { amount: amount })
+            .then((orderResponse) => {
+              const razorpayOrderId = orderResponse.data.id;
+          
+              const options = {
+                key: 'rzp_test_65l34p9RqWEeq9', // Replace with your Razorpay Key ID
+                amount: amount * 100, // Amount in paise
+                currency: "INR",
+                name: "ZappCab",
+                description: "Payment for Ride",
+                order_id: razorpayOrderId, // Get the order_id from the backend
+                handler: async function (response) {
+                  const { razorpay_payment_id, razorpay_order_id, razorpay_signature } = response;
+      
+                  // Send these details to your backend for verification
+                  try {
+                    const verificationResponse = await axiosInstance.post('/api/ride/verify-payment', {
+                      payment_id: razorpay_payment_id,
+                      order_id: razorpay_order_id,
+                      signature: razorpay_signature,
+                    });
+                    if (verificationResponse.data.success) {
+                      resolve(true); // Payment verified successfully
+                    } else {
+                      reject('Payment verification failed');
+                    }
+                  } catch (error) {
+                    reject('Error during payment verification');
+                  }
+                },
+                prefill: {
+                  name: "Customer Name",
+                  email: "customer@example.com",
+                  contact: "9876543210"
+                },
+                modal: {
+                  ondismiss: function () {
+                    alert('Payment process was cancelled!');
+                    reject('Payment cancelled');
+                  }
+                },
+                theme: {
+                  color: "#F37254"
+                }
+              };
+          
+              const rzp = new Razorpay(options);
+              rzp.open();
+            })
+            .catch(error => {
+              reject('Error fetching Razorpay order ID');
             });
-            if (verificationResponse.data.success) {
-                // Payment is verified
-                console.log("Payment verified successfully");
-                set({PaymentConfirm:true})
-                // Handle success (e.g., update UI, store data, etc.)
-            } else {
-                // Payment verification failed
-                console.log("Payment verification failed", result.error);
-            }},
-          prefill: {
-            name: "Customer Name",
-            email: "customer@example.com",
-            contact: "9876543210"
-          },
-          modal: {
-            ondismiss: function() {
-              alert('Payment process was cancelled!');
-            }
-          },
-          theme: {
-            color: "#F37254"
-          }
-        };
-    
-        const rzp = new Razorpay(options);
-        rzp.open();
+        });
       }
+      
 }))

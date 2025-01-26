@@ -14,7 +14,8 @@ const razorpay = new Razorpay({
 });
 
 export const bookRide = async (req,res) => {
-    const {pickup,destination,fare,driverId,vehicle,image} = req.body
+  console.log(req.body);
+    const {pickup,destination,fare,driverId,vehicle,image,distance,time} = req.body
     const userId = req.user._id
     try {
         const user = await User.findById(userId)
@@ -24,6 +25,7 @@ export const bookRide = async (req,res) => {
         }
 
         const response = await cloudinary.uploader.upload(image)
+        console.log(response);
 
         const newRide = new Ride({
             userId,
@@ -32,14 +34,16 @@ export const bookRide = async (req,res) => {
             fare,
             driverId,
             vehicle,
-            map : response.secure_url
+            map : response.secure_url,
+            distance,
+            time
         })
 
         if(newRide)
         {
             await newRide.save()
             newRide.populate('userId','fullName')
-            newRide.populate('driverId','fullName phoneNo vehicle')
+            newRide.populate('driverId','fullName phoneNo vehicle license')
             res.status(201).json(newRide)
         }
         else{
@@ -47,7 +51,7 @@ export const bookRide = async (req,res) => {
         }
 
     } catch (error) {
-        console.log("Error in bookRides controller", error.message)
+        console.log("Error in bookRides controller", error)
         res.status(500).json({ messaage: "Internal Server Error"})
     }    
     
@@ -56,8 +60,7 @@ export const bookRide = async (req,res) => {
 
 export const getRides = async (req,res) => {
     try {
-        const rides = await Ride.find({userId : {$in : [req.user._id]}}).populate('userId','fullName')
-        rides.populate('driverId','fullName phoneNo vehicle')
+        const rides = await Ride.find({userId : {$in : [req.user._id]}}).populate('userId','fullName').populate('driverId','fullName phoneNo vehicle')
         res.status(200).json(rides)   
     } catch (error) {
         console.log("Error in getRides controller", error.message)
@@ -75,7 +78,7 @@ export const getDrivers = async (req,res) => {
                         type:'Point',
                         coordinates: [latitude,longitude]
                     },
-                    $maxDistance : 5000
+                    $maxDistance : 20000
                 }
         }})
         res.status(200).json(drivers)   

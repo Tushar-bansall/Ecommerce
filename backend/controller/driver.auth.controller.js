@@ -26,6 +26,10 @@ export const signup= async (req,res)=>{
 
         const salt = await bcrypt.genSalt(10)
         const hashPass = await bcrypt.hash(password,salt);
+        const location = {
+            type: "Point",
+            coordinates: [0, 0]  // Assume longitude and latitude are provided in the request
+          };
 
         const newDriver = new Driver({
             fullName,
@@ -33,7 +37,8 @@ export const signup= async (req,res)=>{
             password: hashPass,
             phoneNo,
             license,
-            vehicle
+            vehicle,
+            location
         })
 
         if(newDriver)

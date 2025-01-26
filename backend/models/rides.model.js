@@ -30,6 +30,14 @@ const rideSchema = new mongoose.Schema({
     map : {
         type: String,
         required: true
+    },
+    distance : {
+        type: Number,
+        required: true
+    },
+    time : {
+        type: Number,
+        required: true
     }
 
 },{timestamps: true})

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { forwardRef, useEffect, useState } from 'react'
 import {MapContainer,TileLayer,Marker,Popup, useMap,Polyline} from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
@@ -23,38 +23,55 @@ const defaultIcon = L.icon({
     popupAnchor: [1,-34],
     
 })
+const pickupIcon = L.icon({
+    iconUrl: 'pickup.png',
+    iconSize: [25,41],
+    iconAnchor: [12,41],
+    popupAnchor: [1,-34],
+    
+})
+const destinationIcon= L.icon({
+    iconUrl: 'destination.png',
+    iconSize: [25,41],
+    iconAnchor: [12,41],
+    popupAnchor: [1,-34],
+    
+})
 
 const Map = (props) => {
-    const {markers,location} = useRideStore()
+  
+  const {markers,location} = useRideStore()
+
     
     const UpdateMapCenter = () => {
         const map = useMap()
     
         useEffect(() => {
           if (location.latitude && location.longitude) {
-            map.setView([location.latitude, location.longitude], map.getZoom())
+            map.setView([location.latitude, location.longitude])
+
+            map.setZoom(14)
           }
-        }, [location, map])
+        }, [location,map])
     
         return null
       }
       let bounds
 
-      if (props.pickupcoordinates && props.destinationcoordinates)
-      {
-        
-        bounds = new LatLngBounds([[props.pickupcoordinates.latitude,props.pickupcoordinates.longitude], [props.destinationcoordinates.latitude,props.destinationcoordinates.longitude]]);
-
-      }
+      
 
       const FitBounds = () => {
+        if (props.pickupcoordinates && props.destinationcoordinates)
+          {
+            bounds = new LatLngBounds([[props.pickupcoordinates.latitude,props.pickupcoordinates.longitude], [props.destinationcoordinates.latitude,props.destinationcoordinates.longitude]]);
+            
+          }
         const map = useMap();
         useEffect(() => {
-          if(props.pickupcoordinates && props.destinationcoordinates)
+          if(bounds)
           {
-            map.fitBounds(bounds,{
-              padding:[10,10]
-            });
+            map.fitBounds(bounds);
+            map.setZoom(14)
           }
 
         }, [map, bounds]);
@@ -63,9 +80,10 @@ const Map = (props) => {
       };
 
   return (
-    <MapContainer ref={props.mapRef} className='absolute inset-0 z-0' center ={[location.latitude,location.longitude]} zoom={14} scrollWheelZoom={false}>
+    <MapContainer className='absolute inset-0 z-0 ' center ={[location.latitude,location.longitude]} zoom={14} scrollWheelZoom={false}>
         <TileLayer url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">openstreetmap</a> contributors' />
+        
         <UpdateMapCenter />
         { props.route && 
           <Polyline 
@@ -76,12 +94,18 @@ const Map = (props) => {
           />
         }
         {
+          
             markers.map((marker,index)=> (
                 <Marker key={index} position={marker} icon={defaultIcon}>
                     
                 </Marker>
-            ))
-        }
+            ))}
+            {props.pickupcoordinates && <Marker key={"-2"} position={[props.pickupcoordinates.latitude,props.pickupcoordinates.longitude]} icon={pickupIcon}>
+                    
+                </Marker>}
+            {props.destinationcoordinates && <Marker key={"-1"} position={[props.destinationcoordinates.latitude,props.destinationcoordinates.longitude]} icon={destinationIcon}>
+                    
+                </Marker>}
         <FitBounds />
     </MapContainer>
   )

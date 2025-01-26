@@ -8,7 +8,6 @@ export const useDriverAuthStore = create( (set,get) => ({
     isSigningUp : false,
     isLoggingIn : false,
     isCheckingDriverAuth:true,
-    isUpdatingLocation : false,
     onlineDrivers: [],
 
     
@@ -35,7 +34,7 @@ export const useDriverAuthStore = create( (set,get) => ({
             set({isSigningUp : false})
         }
     },
-    logout : async () => {
+    Driverlogout : async () => {
         try {
             await axiosInstance.post("/api/driver/logout")
             set({authDriver:null})
@@ -57,15 +56,11 @@ export const useDriverAuthStore = create( (set,get) => ({
         }
     },
     updateLocation : async (data) => {
-        set({isUpdatingLocation: true})
         try {
             const res= await axiosInstance.put("/api/driver/updateLocation",data)
             set({authDriver : res.data})
-            toast.success("Location successfully updated")
         } catch (error) {
             toast.error(error.response.data.message)
-        } finally {
-            set({isUpdatingLocation: false})
         }
     },
 }))

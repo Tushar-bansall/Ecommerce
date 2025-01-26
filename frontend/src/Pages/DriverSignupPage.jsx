@@ -33,16 +33,16 @@ const DriverSignupPage = () => {
   }
 
   return (
-    <div className=' grid md:grid-cols-2 h-[calc(100vh-10rem)] sm:h-[calc(100vh-5rem)] bg-[url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqMdddS5WoPOqsJvn26oVcmzAbH4v92XO87w&s)]'>
+    <div className='flex h-[calc(100vh-10rem)] sm:h-[calc(100vh-5rem)] bg-[url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqMdddS5WoPOqsJvn26oVcmzAbH4v92XO87w&s)]'>
     {/* left side */}
-      <div className='flex flex-col gap-4 justify-center items-center'>
+      <div className='flex flex-col justify-center items-center'>
         <div className='w-full max-w-md text-center mb-3 flex flex-col items-center group gap-4'>
           <img src="logo.png" className='w-15 h-11 sm:w-22 sm:h-16'/>
           <h1 className='text-lg sm:text-2xl font-bold mt-2 text-orange-700'> Create Account</h1>
         </div>
-      <form onSubmit={handleSubmit} className='space-y-6 w-[calc(100vw-5rem)] md:w-80'> 
+        <form onSubmit={handleSubmit} className=' w-screen  grid grid-cols-3 gap-4 p-10'> 
 
-        <label className="input input-bordered flex items-center gap-2">
+        <label className="input w-fit input-bordered flex items-center gap-2">
           <span className='label-text font-medium text-yellow-300'>Full Name</span>
 
           <svg
@@ -57,7 +57,7 @@ const DriverSignupPage = () => {
             setformData({...formData,fullName:e.target.value})}         
           />
         </label>
-        <label className="input input-bordered flex items-center gap-2 ">
+        <label className="input w-fit input-bordered flex items-center gap-2 ">
           <span className='label-text font-medium text-yellow-300'>Email</span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -73,7 +73,7 @@ const DriverSignupPage = () => {
             setformData({...formData,email:e.target.value})}         
           />
         </label>
-        <label className="input input-bordered flex items-center gap-2 ">
+        <label className="input w-fit input-bordered flex items-center gap-2 ">
           <span className='label-text font-medium text-yellow-300'>Phone Number</span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -89,7 +89,7 @@ const DriverSignupPage = () => {
             setformData({...formData,phoneNo:e.target.value})}         
           />
         </label>
-        <label className="input input-bordered flex items-center gap-2 ">
+        <label className="input w-fit input-bordered flex items-center gap-2 ">
           <span className='label-text font-medium text-yellow-300'>license</span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -105,23 +105,20 @@ const DriverSignupPage = () => {
             setformData({...formData,license:e.target.value})}         
           />
         </label>
-        <label className="input input-bordered flex items-center gap-2 ">
-          <span className='label-text font-medium text-yellow-300'>vehicle</span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 16 16"
-            fill="currentColor"
-            className="h-4 w-4 opacity-70">
-            <path
-              d="M2.5 3A1.5 1.5 0 0 0 1 4.5v.793c.026.009.051.02.076.032L7.674 8.51c.206.1.446.1.652 0l6.598-3.185A.755.755 0 0 1 15 5.293V4.5A1.5 1.5 0 0 0 13.5 3h-11Z" />
-            <path
-              d="M15 6.954 8.978 9.86a2.25 2.25 0 0 1-1.956 0L1 6.954V11.5A1.5 1.5 0 0 0 2.5 13h11a1.5 1.5 0 0 0 1.5-1.5V6.954Z" />
-          </svg>
-          <input type="text" className="grow" placeholder="vehicle type and number plate" value={formData.vehicle} onChange = {(e) => 
-            setformData({...formData,vehicle:e.target.value})}         
-          />
+        <label className="input w-fit input-bordered flex items-center gap-2 ">
+          <span className='label-text font-medium text-yellow-300'>vehicle type</span>
+          
+          <select value={formData.vehicle} className="select select-ghost w-fit" onChange = {(e) => 
+            setformData({...formData,vehicle:e.target.value})} >
+            <option disabled selected>Vehicle Type</option>
+            <option>Auto</option>
+            <option>Bike</option>
+            <option>Hatchback</option>
+            <option>Sedan</option>
+            <option>SUV</option>
+          </select>
         </label>
-        <label className="input input-bordered flex items-center gap-2">
+        <label className="input w-fit input-bordered flex items-center gap-2">
           <span className='label-text font-medium text-yellow-300'>Password</span>
 
           <svg
@@ -142,13 +139,10 @@ const DriverSignupPage = () => {
             : <button className="btn w-full"><span className="loading loading-spinner"></span>loading</button>}
       </form>
 
-      <div className='text-center ' style={{margin: 15}}>
         <p className='text-sm text-base-content/60 sm:text-base text-blue-800 md:text-blue-500'>
             Already Have an Account?{" "}
             <Link to="/driverlogin" className="link link-primary text-blue-800 md:text-blue-500"> Sign In</Link>
         </p>
-
-      </div>
       </div>
     </div>
   )
