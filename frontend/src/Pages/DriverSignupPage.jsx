@@ -33,17 +33,17 @@ const DriverSignupPage = () => {
   }
 
   return (
-    <div className='flex h-[calc(100vh-10rem)] sm:h-[calc(100vh-5rem)] bg-[url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqMdddS5WoPOqsJvn26oVcmzAbH4v92XO87w&s)]'>
+    <div className='flex h-[calc(100vh-10rem)] sm:h-[calc(100vh-5rem)] bg-white'>
     {/* left side */}
-      <div className='flex flex-col justify-center items-center'>
-        <div className='w-full max-w-md text-center mb-3 flex flex-col items-center group gap-4'>
-          <img src="logo.png" className='w-15 h-11 sm:w-22 sm:h-16'/>
-          <h1 className='text-lg sm:text-2xl font-bold mt-2 text-orange-700'> Create Account</h1>
+      <div className='flex flex-col justify-center items-center w-[calc(62vw)]'>
+        <div className='text-center mb-3 flex flex-col items-center group gap-4'>
+          
+          <h1 className='text-lg sm:text-2xl font-bold mt-2 text-green-900'> Create Account</h1>
         </div>
-        <form onSubmit={handleSubmit} className=' w-screen  grid grid-cols-3 gap-4 p-10'> 
+        <form onSubmit={handleSubmit} className='w-full md:w-[calc(60vw)] grid md:grid-cols-2 gap-2 p-2'> 
 
-        <label className="input w-fit input-bordered flex items-center gap-2">
-          <span className='label-text font-medium text-yellow-300'>Full Name</span>
+        <label className="input w-full md:w-[calc(28vw)] input-bordered flex items-center gap-2">
+          <span className='label-text font-medium text-orange-500'>Full Name</span>
 
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -57,8 +57,8 @@ const DriverSignupPage = () => {
             setformData({...formData,fullName:e.target.value})}         
           />
         </label>
-        <label className="input w-fit input-bordered flex items-center gap-2 ">
-          <span className='label-text font-medium text-yellow-300'>Email</span>
+        <label className="input w-full md:w-[calc(28vw)] input-bordered flex items-center gap-2 ">
+          <span className='label-text font-medium text-orange-500'>Email</span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 16 16"
@@ -73,8 +73,8 @@ const DriverSignupPage = () => {
             setformData({...formData,email:e.target.value})}         
           />
         </label>
-        <label className="input w-fit input-bordered flex items-center gap-2 ">
-          <span className='label-text font-medium text-yellow-300'>Phone Number</span>
+        <label className="input w-full md:w-[calc(28vw)] input-bordered flex items-center gap-2 ">
+          <span className='label-text font-medium text-orange-500'>Phone Number</span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 16 16"
@@ -89,8 +89,8 @@ const DriverSignupPage = () => {
             setformData({...formData,phoneNo:e.target.value})}         
           />
         </label>
-        <label className="input w-fit input-bordered flex items-center gap-2 ">
-          <span className='label-text font-medium text-yellow-300'>license</span>
+        <label className="input w-full md:w-[calc(28vw)] input-bordered flex items-center gap-2 ">
+          <span className='label-text font-medium text-orange-500'>license</span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 16 16"
@@ -105,8 +105,8 @@ const DriverSignupPage = () => {
             setformData({...formData,license:e.target.value})}         
           />
         </label>
-        <label className="input w-fit input-bordered flex items-center gap-2 ">
-          <span className='label-text font-medium text-yellow-300'>vehicle type</span>
+        <label className="input w-full md:w-[calc(28vw)] input-bordered flex items-center gap-2 ">
+          <span className='label-text font-medium text-orange-500'>vehicle type</span>
           
           <select value={formData.vehicle} className="select select-ghost w-fit" onChange = {(e) => 
             setformData({...formData,vehicle:e.target.value})} >
@@ -118,7 +118,7 @@ const DriverSignupPage = () => {
             <option>SUV</option>
           </select>
         </label>
-        <label className="input w-fit input-bordered flex items-center gap-2">
+        <label className="input w-full md:w-[calc(28vw)] input-bordered flex items-center gap-2">
           <span className='label-text font-medium text-yellow-300'>Password</span>
 
           <svg
@@ -144,6 +144,11 @@ const DriverSignupPage = () => {
             <Link to="/driverlogin" className="link link-primary text-blue-800 md:text-blue-500"> Sign In</Link>
         </p>
       </div>
+      
+      <video className="hidden md:block w-full h-[calc(85vh)]" autoPlay muted loop>
+        <source src="driverside.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
     </div>
   )
 }

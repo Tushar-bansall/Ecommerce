@@ -14,6 +14,7 @@ import { useDriverAuthStore } from './store/driverauthStore'
 import { useAuthStore } from './store/useAuthStore'
 import Navbar from "./Components/Navbar"
 import BottomNavbar from './Components/bottomNavbar'
+import RideCompletePage from './Pages/rideCompletePage'
 
 function App() {
   const {authUser, checkAuth, isCheckingAuth} = useAuthStore()
@@ -44,11 +45,13 @@ function App() {
           <Route path='/login' element={authUser ? <Navigate to='/' /> : <LoginPage />}/>
           <Route path='/signup' element={authUser ? <Navigate to='/' /> : <SignupPage />}/>
           <Route path='/profile' element={authUser ? <ProfilePage /> : <Navigate to='/login' /> }/>
+          <Route path='/rideComplete' element={authUser ? <RideCompletePage /> : <Navigate to='/login' /> }/>
           <Route path='/rides' element={(authUser|| authDriver) ? <RidesPage /> : <Navigate to='/login' /> }/>
           <Route path='/driver' element={authDriver ? <DriverHomePage /> : <Navigate to='/driverlogin' /> }/>
           <Route path='/driverlogin' element={authDriver ? <Navigate to='/driver' /> : <DriverLoginPage />}/>
           <Route path='/driversignup' element={authDriver ? <Navigate to='/driver' /> : <DriverSignupPage />}/>
           <Route path='/driverprofile' element={authDriver ? <DriverProfilePage /> : <Navigate to='/driverlogin' /> }/>
+          
           </Routes>
       <BottomNavbar />
       <Toaster />

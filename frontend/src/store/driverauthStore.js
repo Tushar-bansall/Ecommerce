@@ -63,4 +63,14 @@ export const useDriverAuthStore = create( (set,get) => ({
             toast.error(error.response.data.message)
         }
     },
+    getLocation : async (driverId) =>
+    {
+      try {
+          const res = await axiosInstance.get(`/api/driver/location/${driverId}`)
+          return res
+      } catch (error) {
+          toast.error(error.response.data.message)
+      }
+    }
+    
 }))

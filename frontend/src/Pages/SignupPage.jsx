@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useEffect} from 'react'
 import {useAuthStore} from "../store/useAuthStore"
 import {Link} from 'react-router-dom'
 import toast from 'react-hot-toast'
@@ -21,6 +21,21 @@ const SignupPage = () => {
     return true;
   } 
 
+  
+    useEffect(()=>{
+      const script = document.createElement("script")
+      script.src="https://accounts.google.com/gsi/client"
+      script.async=true
+      script.defer = true
+      document.body.appendChild(script)
+  
+      return ()=>{
+        document.body.removeChild(script)
+  
+      }
+    },[])
+  
+
   const handleSubmit = (e) => {
     e.preventDefault()
 
@@ -30,17 +45,17 @@ const SignupPage = () => {
   }
 
   return (
-    <div className=' grid md:grid-cols-2 h-[calc(100vh-10rem)] sm:h-[calc(100vh-5rem)] bg-[url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqMdddS5WoPOqsJvn26oVcmzAbH4v92XO87w&s)]'>
+    <div className=' grid md:grid-cols-2 h-[calc(100vh-10rem)] sm:h-[calc(100vh-5rem)] bg-white'>
     {/* left side */}
       <div className='flex flex-col gap-4 justify-center items-center'>
         <div className='w-full max-w-md text-center mb-3 flex flex-col items-center group gap-4'>
-          <img src="logo.png" className='w-15 h-11 sm:w-22 sm:h-16'/>
-          <h1 className='text-lg sm:text-2xl font-bold mt-2 text-orange-700'> Create Account</h1>
+         
+          <h1 className='text-lg sm:text-2xl font-bold mt-2 text-blue-600'> Create Account</h1>
         </div>
       <form onSubmit={handleSubmit} className='space-y-6 w-[calc(100vw-5rem)] md:w-80'> 
 
         <label className="input input-bordered flex items-center gap-2">
-          <span className='label-text font-medium text-yellow-300'>Full Name</span>
+          <span className='label-text font-medium text-gray-300'>Full Name</span>
 
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -55,7 +70,7 @@ const SignupPage = () => {
           />
         </label>
         <label className="input input-bordered flex items-center gap-2 ">
-          <span className='label-text font-medium text-yellow-300'>Email</span>
+          <span className='label-text font-medium text-gray-300'>Email</span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 16 16"
@@ -71,7 +86,7 @@ const SignupPage = () => {
           />
         </label>
         <label className="input input-bordered flex items-center gap-2">
-          <span className='label-text font-medium text-yellow-300'>Password</span>
+          <span className='label-text font-medium text-gray-300'>Password</span>
 
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -87,18 +102,31 @@ const SignupPage = () => {
             setformData({...formData,password:e.target.value})}         
           />
         </label>
-        { !isSigningUp ? <button type='submit' className="btn btn-sm sm:btn-md btn-outline btn-success w-full text-base" >SignUp</button>
+        { !isSigningUp ? <button type='submit' className="btn btn-sm sm:btn-md btn-outline btn-info w-full text-base" >SignUp</button>
             : <button className="btn w-full"><span className="loading loading-spinner"></span>loading</button>}
       </form>
 
-      <div className='text-center ' style={{margin: 15}}>
+      <div className='text-center ' >
         <p className='text-sm text-base-content/60 sm:text-base text-blue-800 md:text-blue-500'>
             Already Have an Account?{" "}
             <Link to="/login" className="link link-primary text-blue-800 md:text-blue-500"> Sign In</Link>
         </p>
 
       </div>
+      
+      <div id="g_id_onload"
+          data-client_id="127607273969-unke3e8nevhb40vqdvg3u9q1aq1ce5u9.apps.googleusercontent.com"
+          data-callback="handleCredentialResponse"
+          data-auto_prompt = "false"></div>
+        <div className="g_id_signin"
+          data-type="standard"
+          data-shape="rectangular"
+          data-theme="outline"
+          data-text="sign_in_with"
+          data-size="large"
+          data-logo_alignment="left"></div>
       </div>
+      <iframe className=' h-[calc(84vh)] w-[calc(50vw)] hidden md:block' src="https://lottie.host/embed/920bb5a6-365b-47c9-9e3f-385e7e694bea/RGL4l45n4j.lottie"></iframe>
     </div>
   )
 }

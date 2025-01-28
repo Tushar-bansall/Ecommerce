@@ -6,7 +6,7 @@ const DriverHomePage = () => {
   
   const {updateLocation} = useDriverAuthStore()
   
-const getLocation = () => {
+const GetCurrentLocation = () => {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -22,14 +22,14 @@ const getLocation = () => {
   }
 };
 
-const trackLocation = () => {
-  setInterval(() => {
-    getLocation();
-  }, 5000); // Checks location every 5 seconds (adjust as needed)
-};
-
-// Start tracking location
-trackLocation();
+    useEffect(() => {
+      GetCurrentLocation(); // Get initial location
+      const locationInterval = setInterval(GetCurrentLocation, 5000); // Update location every 5 seconds
+  
+      // Clean up the interval when the component unmounts
+      return () => clearInterval(locationInterval);
+    }, []);
+  
   return (
     <div>DriverHomePage</div>
   )

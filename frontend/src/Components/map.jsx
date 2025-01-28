@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useState } from 'react'
+import React, { useRef, useEffect, useState } from 'react'
 import {MapContainer,TileLayer,Marker,Popup, useMap,Polyline} from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
@@ -16,27 +16,30 @@ L.Icon.Default.mergeOptions({
     shadowUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png",
 })
 
-const defaultIcon = L.icon({
-    iconUrl: 'vite.svg',
-    iconSize: [25,41],
-    iconAnchor: [12,41],
-    popupAnchor: [1,-34],
-    
-})
 const pickupIcon = L.icon({
-    iconUrl: 'pickup.png',
+    iconUrl: 'pick.png',
     iconSize: [25,41],
     iconAnchor: [12,41],
     popupAnchor: [1,-34],
-    
 })
 const destinationIcon= L.icon({
-    iconUrl: 'destination.png',
+    iconUrl: 'des.png',
+    iconSize: [25,41],
+    iconAnchor: [12,41],
+    popupAnchor: [1,-34],
+})
+const locationIcon= L.icon({
+    iconUrl: 'location.png',
     iconSize: [25,41],
     iconAnchor: [12,41],
     popupAnchor: [1,-34],
     
 })
+
+const link = (data) =>{
+  if(data==="Bike" || data==="Auto") return (data + ".png")
+    return (data + ".svg")
+}
 
 const Map = (props) => {
   
@@ -49,10 +52,15 @@ const Map = (props) => {
         useEffect(() => {
           if (location.latitude && location.longitude) {
             map.setView([location.latitude, location.longitude])
-
-            map.setZoom(14)
           }
-        }, [location,map])
+
+        }, [map])
+        useEffect(() => {
+          if (props.pickupcoordinates) {
+            map.setView([props.pickupcoordinates.latitude, props.pickupcoordinates.longitude])
+          }
+
+        }, [props.pickupcoordinates,map])
     
         return null
       }
@@ -61,7 +69,14 @@ const Map = (props) => {
       
 
       const FitBounds = () => {
-        if (props.pickupcoordinates && props.destinationcoordinates)
+        if(props.rideConfirm && props.pickupcoordinates && props.drivercoordinates)
+        {
+          bounds = new LatLngBounds([[props.pickupcoordinates.latitude,props.pickupcoordinates.longitude], props.drivercoordinates]);
+        }else if(props.rideStart && props.destinationcoordinates && props.drivercoordinates)
+          {
+            bounds = new LatLngBounds([[props.destinationcoordinates.latitude,props.destinationcoordinates.longitude], props.drivercoordinates]);
+          }
+        else if (props.pickupcoordinates && props.destinationcoordinates)
           {
             bounds = new LatLngBounds([[props.pickupcoordinates.latitude,props.pickupcoordinates.longitude], [props.destinationcoordinates.latitude,props.destinationcoordinates.longitude]]);
             
@@ -70,8 +85,9 @@ const Map = (props) => {
         useEffect(() => {
           if(bounds)
           {
-            map.fitBounds(bounds);
-            map.setZoom(14)
+            map.fitBounds(bounds,{
+              padding:[30,30]
+            });
           }
 
         }, [map, bounds]);
@@ -79,8 +95,20 @@ const Map = (props) => {
         return null;
       };
 
+      const markersRef = useRef([]);
+
+      useEffect(() => {
+        // After markers are rendered, add the blinking class to all marker icons
+        markersRef.current.forEach((marker) => {
+          const iconElement = marker.getElement();
+          if (iconElement) {
+            iconElement.classList.add('blinking-icon'); // Add blinking class
+          }
+        });
+      }, [location]);
+
   return (
-    <MapContainer className='absolute inset-0 z-0 ' center ={[location.latitude,location.longitude]} zoom={14} scrollWheelZoom={false}>
+    <MapContainer className='absolute inset-0 z-0 w-full' center ={[location.latitude,location.longitude]} zoom={14} scrollWheelZoom={false}>
         <TileLayer url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">openstreetmap</a> contributors' />
         
@@ -96,7 +124,15 @@ const Map = (props) => {
         {
           
             markers.map((marker,index)=> (
-                <Marker key={index} position={marker} icon={defaultIcon}>
+                <Marker key={index} position={marker.location} 
+                icon={marker.icon ? 
+                  L.icon({
+                      iconUrl: link(marker.icon),
+                      iconSize: [25,41],
+                      iconAnchor: [12,41],
+                      popupAnchor: [1,-34],
+                      
+                  }) : locationIcon} >
                     
                 </Marker>
             ))}
@@ -106,6 +142,12 @@ const Map = (props) => {
             {props.destinationcoordinates && <Marker key={"-1"} position={[props.destinationcoordinates.latitude,props.destinationcoordinates.longitude]} icon={destinationIcon}>
                     
                 </Marker>}
+            {location && <Marker key={"-3"} position={[location.latitude,location.longitude]} icon={locationIcon}
+                          ref={(el) => markersRef.current[0] = el} // Save the marker in the ref
+                          >
+                    
+                    </Marker>
+                    }
         <FitBounds />
     </MapContainer>
   )

@@ -7,16 +7,16 @@ const ProfilePage = () => {
 
 
   return (
-    <div className=" bg-[url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTuJAmi3fHHjog92eHrAEgbL6Y_qe7J_bJdxg&s)] bg-cover flex items-center justify-center h-[calc(100vh-10rem)] sm:h-[calc(100vh-5rem)]">
-    <div className="text-center bg-slate-300 w-80 max-w-4xl mx-auto pt-4">
+    <div className=" flex items-center justify-center h-[calc(100vh-10rem)] sm:h-[calc(100vh-5rem)]">
+    <div className="text-center bg-slate-800 w-80 max-w-4xl mx-auto pt-4">
       <div>
-        <h2 className=" text-lg md:text-2xl font-bold text-indigo-600">Profile</h2>
+        <h2 className=" text-lg md:text-2xl font-bold text-slate-100">Profile</h2>
       </div>
       <div className="text-center mb-4 mt-4">
         
         <form className="space-y-6 w-72 p-6 mx-auto">
           <label className="input input-bordered flex items-center gap-1">
-            <span className="label-text font-medium text-nowrap text-yellow-300">Full Name</span>
+            <span className="label-text font-medium text-nowrap text-slate-100">Full Name</span>
   
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -36,7 +36,7 @@ const ProfilePage = () => {
             />
           </label>
           <label className="input input-bordered flex items-center gap-1">
-            <span className="label-text font-medium text-yellow-300">Email</span>
+            <span className="label-text font-medium text-slate-100">Email</span>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 16 16"

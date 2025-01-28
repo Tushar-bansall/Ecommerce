@@ -95,7 +95,7 @@ export const getRoutes = async (req, res) => {
     if (!pickupcoordinates || !destinationcoordinates) {
       return res.status(400).json({ message: 'Pickup and destination coordinates are required' });
     }
-  
+    console.log(pickupcoordinates,destinationcoordinates);
     const { latitude: pickupLat, longitude: pickupLng } = pickupcoordinates;
     const { latitude: destinationLat, longitude: destinationLng } = destinationcoordinates;
   

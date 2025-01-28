@@ -11,10 +11,14 @@ export default {
       fontSize: {
         'xxs': '0.75rem'
       },
+      rotate: {
+        '90': '90deg', // Custom rotation of 30 degrees
+      },
     },
   },
   plugins: [
-    daisyui
+    daisyui,
+    require('tailwind-scrollbar'),
   ],
 }
 

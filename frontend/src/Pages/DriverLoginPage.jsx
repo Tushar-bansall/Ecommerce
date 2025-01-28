@@ -16,16 +16,16 @@ const DriverLoginPage = () => {
   }
 
   return (
-    <div className=' grid md:grid-cols-2  h-[calc(100vh-10rem)] sm:h-[calc(100vh-5rem)] bg-[url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqMdddS5WoPOqsJvn26oVcmzAbH4v92XO87w&s)]'>
+    <div className=' grid md:grid-cols-2  h-[calc(100vh-10rem)] sm:h-[calc(100vh-5rem)] bg-white'>
     {/* left side */}
       <div className='flex flex-col gap-4 justify-center items-center'>
         <div className='w-full max-w-md text-center mb-5 flex flex-col items-center group gap-4'>
-          <img src="logo.png" className='w-15 h-11 sm:w-22 sm:h-16'/>
-          <h1 className='text-lg sm:text-2xl font-bold mt-2 text-orange-700'> Login</h1>
+          
+          <h1 className='text-lg sm:text-2xl font-bold mt-2 text-green-900'> Login</h1>
         </div>
         <form onSubmit={handleSubmit} className='space-y-6 w-[calc(100vw-5rem)] md:w-80 '> 
           <label className="input input-bordered flex items-center gap-2 ">
-            <span className='label-text font-medium text-yellow-300'>Email</span>
+            <span className='label-text font-medium text-orange-500'>Email</span>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 16 16"
@@ -41,7 +41,7 @@ const DriverLoginPage = () => {
             />
           </label>
           <label className="input input-bordered flex items-center gap-2">
-            <span className='label-text font-medium text-yellow-300'>Password</span>
+            <span className='label-text font-medium text-orange-500'>Password</span>
 
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -69,6 +69,10 @@ const DriverLoginPage = () => {
 
         </div>
       </div>
+      <video className="hidden md:block w-full h-[calc(85vh)]" autoPlay muted loop>
+        <source src="driverside.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
     </div>
 
   )

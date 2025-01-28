@@ -1,12 +1,11 @@
 import { create } from "zustand";
 import toast from "react-hot-toast";
-import { axiosInstance } from "../lib/axios";
+import { axiosInstance } from "../lib/axios"
 
 export const useRideStore = create((set,get) => ({
     rides: [],
     drivers: [],
     markers: [],
-    
     location : {latitude: 28.4750063,longitude: 77.0103535},
     setLocation : (data) => set({location : data}),
 
@@ -33,7 +32,12 @@ export const useRideStore = create((set,get) => ({
             const res= await axiosInstance.put("/api/ride/drivers",get().location)
             set({drivers:res.data})
             console.log(get().drivers);
-            set({markers: get().drivers.map((driver)=>driver.location.coordinates)})
+            set({
+              markers: get().drivers.map((driver) => ({
+                icon: driver.vehicle,
+                location: driver.location.coordinates
+              }))
+            });
             console.log(get().markers);
         } catch (error) {
             console.log(error)

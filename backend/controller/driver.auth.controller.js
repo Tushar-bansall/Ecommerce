@@ -145,3 +145,18 @@ export const updateLocation = async (req,res) => {
         res.status(500).json({ message: "Internal Server Error "})
     }
 }
+
+export const getLocation = async (req,res) => {
+    const {id} = req.params
+    console.log(id);
+    try {
+        const driver = await Driver.findById(id)
+        const location = driver.location.coordinates
+        console.log(location);
+        res.status(200).json(location)
+    } catch (error) {
+        console.log("Error in getLocation controller",error.message)
+        res.status(500).json({ message: "Internal Server Error "})
+    }
+    
+}
