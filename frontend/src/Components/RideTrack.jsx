@@ -5,7 +5,6 @@ const RideTrack = ({
     droptime = 0, 
     pickuptime = 0, 
     driverId = {}, 
-    vehicle = '', 
     pickup = '', 
     destination = '' 
 }) => {
