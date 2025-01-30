@@ -8,13 +8,13 @@ const ProfilePage = () => {
 
   return (
     <div className=" flex items-center justify-center h-[calc(100vh-10rem)] sm:h-[calc(100vh-5rem)]">
-    <div className="text-center bg-slate-800 w-80 max-w-4xl mx-auto pt-4">
+    <div className="text-center bg-slate-800 w-full max-w-4xl mx-auto pt-4">
       <div>
         <h2 className=" text-lg md:text-2xl font-bold text-slate-100">Profile</h2>
       </div>
       <div className="text-center mb-4 mt-4">
         
-        <form className="space-y-6 w-72 p-6 mx-auto">
+        <form className="space-y-6 w-fit p-6 mx-auto">
           <label className="input input-bordered flex items-center gap-1">
             <span className="label-text font-medium text-nowrap text-slate-100">Full Name</span>
   

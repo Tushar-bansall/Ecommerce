@@ -1,6 +1,31 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { useDriverAuthStore } from '../store/driverauthStore'
+import { useRideStore } from '../store/rideauthStore'
 
 const Dashboard = () => {
+    const {authDriver} = useDriverAuthStore()
+    const {rides,getDriverRides} = useRideStore()
+
+
+    const getDayName = (date) =>{
+        const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        return days[date.getDay()];
+    }
+
+    useEffect(()=>{
+        getDriverRides()
+    },[rides,getDriverRides])
+
+    let totalfares =0
+    
+    rides.forEach((ride) => {
+        totalfares += ride.fare;
+    });
+    totalfares=totalfares.toFixed(2)
+
+    const vehicleUrl = (authDriver?.vehicle==="Bike" || authDriver?.vehicle==="Auto") ? `${authDriver?.vehicle}.png` : `${authDriver?.vehicle}.svg`
+    const [showTerms,setShowTerms] = useState(false)
+
   return (
     <div>
     <div class="fixed left-0 top-18 w-64 h-full bg-[#f8f4f3] p-4 sidebar-menu transition-transform">
@@ -14,10 +39,10 @@ const Dashboard = () => {
                 </a>
             </li>
             <li class="mb-1 group">
-                <p class="flex font-semibold items-center py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100 sidebar-dropdown-toggle">
+                <a href="/dashboard" class="flex font-semibold items-center py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100 sidebar-dropdown-toggle">
                                    
                     <span class="text-sm">Cabs</span>
-                </p>
+                </a>
             </li>
             <li class="mb-1 group">
                 <a href="/rides" class="flex font-semibold items-center py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100">
@@ -48,22 +73,28 @@ const Dashboard = () => {
             </li>
             <span class="text-gray-400 font-bold">TERMS AND CONDITIONS</span>
             <li class="mb-1 group">
-                <p class="flex font-semibold items-center py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100">
+                <p class="flex cursor-pointer font-semibold items-center py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100">
                                    
-                    <span class="text-sm">Terms</span>
+                    <span class="text-sm" onClick={()=>{setShowTerms(true)}}>Terms</span>
                    </p>
             </li>
             <li class="mb-1 group">
-                <p  class="flex font-semibold items-center py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100">
+                <p  class="flex cursor-pointer font-semibold items-center py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100">
                                    
-                    <span class="text-sm">Customer Care</span>
+                    <span class="text-sm" onClick={()=>{setShowTerms(true)}}>Customer Care</span>
+                  </p>
+            </li>
+            <li class="mb-1 group">
+                <p  class="flex cursor-pointer font-semibold items-center py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100">
+                                   
+                    <span class="text-sm" onClick={()=>{setShowTerms(true)}}>Frequently Asked FAQs</span>
                   </p>
             </li>
         </ul>
     </div>
     <div class="fixed top-0 left-0 w-full h-full bg-black/50 z-40 md:hidden sidebar-overlay"></div>
     
-
+{ !showTerms ?
     <div class="w-full md:w-[calc(100%-256px)] md:ml-64 bg-gray-200 min-h-screen transition-all main">
         
               
@@ -73,25 +104,44 @@ const Dashboard = () => {
                     <div class="flex justify-between mb-6">
                         <div>
                             <div class="flex items-center mb-1">
-                                <div class="text-2xl font-semibold">2</div>
+                                <div class="text-2xl font-semibold">1</div>
                             </div>
-                            <div class="text-sm font-medium text-gray-400">Cabs</div>
+                            <div class="text-sm font-medium text-gray-400">Cab</div>
                         </div>
                     </div>
 
-                    <p class="text-[#f84525] font-medium text-sm hover:text-red-800">View</p>
+                    <p onClick={()=>document.getElementById('my_modal_3').showModal()} class="text-[#f84525] cursor-pointer font-medium text-sm hover:text-red-800">View</p>
+                    <dialog id="my_modal_3" className="modal">
+                        <div className="modal-box bg-white">
+                            <form method="dialog">
+                            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                            </form>
+                            <div className="shadow-xl  rounded-2xl flex p-4 gap-3">         
+                                <div className='flex-col w-full my-auto'>
+                                    <p className='text-md font-semibold text-gray-950'>{authDriver?.license}</p>
+                                    <p className='text-sm font-medium text-gray-950'>{authDriver?.vehicle}</p>
+                                </div>
+                                <div className='flex flex-col'>
+                                    <div className="w-24 h-24 relative">
+                                            <img src={vehicleUrl} className="w-full h-full object-cover rounded-2xl" />
+                                            <div className="badge bg-white border-0 text-gray-950 absolute bottom-1 shadow-black shadow-md left-1/3 transform -translate-x-1/2 p-0.5 text-xxs w-fit">{authDriver?.vehicle}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </dialog>
                 </div>
                 <div class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
                     <div class="flex justify-between mb-4">
                         <div>
                             <div class="flex items-center mb-1">
-                                <div class="text-2xl font-semibold">100</div>
+                                <div class="text-2xl font-semibold">{rides.length}</div>
                                 <div class="p-1 rounded bg-emerald-500/10 text-emerald-500 text-[12px] font-semibold leading-none ml-2">+30%</div>
                             </div>
                             <div class="text-sm font-medium text-gray-400">Rides</div>
                         </div>
                     </div>
-                    <a href="/rides" class="text-[#f84525] font-medium text-sm hover:text-red-800">View</a>
+                    <a href="/rides" class="text-[#f84525] font-medium text-sm hover:text-red-800 cursor-pointer">View</a>
                 </div>
                 <div class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
                     <div class="flex justify-between mb-6">
@@ -100,7 +150,7 @@ const Dashboard = () => {
                             <div class="text-sm font-medium text-gray-400">Repairs</div>
                         </div>
                     </div>
-                    <p class="text-[#f84525] font-medium text-sm hover:text-red-800">View</p>
+                    <p class="text-[#f84525] font-medium text-sm hover:text-red-800 cursor-pointer">View</p>
                 </div>
             </div>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
@@ -190,33 +240,25 @@ const Dashboard = () => {
                     <div class="overflow-hidden">
                         <table class="w-full">
                             <tbody>
+                            {
+                                rides.slice(0,5).map((ride,index) =>{
+                                    const createdAt = new Date(ride.createdAt)
+                                    return (
                                 <tr>
                                 <td class="py-2 px-4 border-b border-b-gray-50">
                                         <div class="flex items-center">
-                                            <a href="#" class="text-gray-600 text-sm font-medium hover:text-blue-500 ml-2 truncate">Ride 1</a>
+                                            <p class="text-gray-600 text-sm font-medium hover:text-blue-500 ml-2 truncate">Ride {index}</p>
                                         </div>
                                     </td>
                                     <td class="py-2 px-4 border-b border-b-gray-50">
-                                        <span class="text-[13px] font-medium text-gray-400">02-02-2024</span>
+                                        <span class="text-[13px] font-medium text-gray-400">{
+                                                `${getDayName(createdAt)}, ${("0" + createdAt.getDate()).slice(-2)}/${("0" + (createdAt.getMonth() + 1)).slice(-2)}/${createdAt.getFullYear()}, ${("0" + createdAt.getHours()).slice(-2)}:${("0" + createdAt.getMinutes()).slice(-2)}:${("0" + createdAt.getSeconds()).slice(-2)}`}</span>
                                     </td>
                                     <td class="py-2 px-4 border-b border-b-gray-50">
-                                        <span class="text-[13px] font-medium text-gray-400">Fare</span>
+                                        <span class="text-[13px] font-medium text-gray-400">₹ {ride.fare}</span>
                                     </td>
-                                </tr>
-                                <tr>
-                                    <td class="py-2 px-4 border-b border-b-gray-50">
-                                        <div class="flex items-center">
-                                            <a href="#" class="text-gray-600 text-sm font-medium hover:text-blue-500 ml-2 truncate">Ride 1</a>
-                                        </div>
-                                    </td>
-                                    <td class="py-2 px-4 border-b border-b-gray-50">
-                                        <span class="text-[13px] font-medium text-gray-400">02-02-2024</span>
-                                    </td>
-                                    <td class="py-2 px-4 border-b border-b-gray-50">
-                                        <span class="text-[13px] font-medium text-gray-400">Fare</span>
-                                    </td>
-                                     
-                                </tr>
+                                </tr>)
+                            })}
                             </tbody>
                         </table>
                     </div>
@@ -231,22 +273,22 @@ const Dashboard = () => {
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
                         <div class="rounded-md border border-dashed border-gray-200 p-4">
                             <div class="flex items-center mb-0.5">
-                                <div class="text-xl font-semibold">10</div>
-                                <span class="p-1 rounded text-[12px] font-semibold bg-blue-500/10 text-blue-500 leading-none ml-1">$80</span>
+                                <div class="text-xl font-semibold">1</div>
+                                <span class="p-1 rounded text-[12px] font-semibold bg-blue-500/10 text-blue-500 leading-none ml-1">₹ 80</span>
                             </div>
                             <span class="text-gray-400 text-sm">Active</span>
                         </div>
                         <div class="rounded-md border border-dashed border-gray-200 p-4">
                             <div class="flex items-center mb-0.5">
-                                <div class="text-xl font-semibold">50</div>
-                                <span class="p-1 rounded text-[12px] font-semibold bg-emerald-500/10 text-emerald-500 leading-none ml-1">+$469</span>
+                                <div class="text-xl font-semibold">{rides.length}</div>
+                                <span class="p-1 rounded text-[12px] font-semibold bg-emerald-500/10 text-emerald-500 leading-none ml-1">+₹ {totalfares}</span>
                             </div>
                             <span class="text-gray-400 text-sm">Completed</span>
                         </div>
                         <div class="rounded-md border border-dashed border-gray-200 p-4">
                             <div class="flex items-center mb-0.5">
-                                <div class="text-xl font-semibold">4</div>
-                                <span class="p-1 rounded text-[12px] font-semibold bg-rose-500/10 text-rose-500 leading-none ml-1">-$130</span>
+                                <div class="text-xl font-semibold">0</div>
+                                <span class="p-1 rounded text-[12px] font-semibold bg-rose-500/10 text-rose-500 leading-none ml-1">-₹ 0</span>
                             </div>
                             <span class="text-gray-400 text-sm">Canceled</span>
                         </div>
@@ -277,7 +319,7 @@ const Dashboard = () => {
                                         </div>
                                     </td>
                                     <td class="py-2 px-4 border-b border-b-gray-50">
-                                        <span class="text-[13px] font-medium text-rose-500">-$235</span>
+                                        <span class="text-[13px] font-medium text-rose-500">-₹ 235</span>
                                     </td>
                                     <td class="py-2 px-4 border-b border-b-gray-50">
                                         <span class="inline-block p-1 rounded bg-rose-500/10 text-rose-500 font-medium text-[12px] leading-none">Withdrawn</span>
@@ -291,7 +333,7 @@ const Dashboard = () => {
                                         </div>
                                     </td>
                                     <td class="py-2 px-4 border-b border-b-gray-50">
-                                        <span class="text-[13px] font-medium text-emerald-500">+$235</span>
+                                        <span class="text-[13px] font-medium text-emerald-500">+₹ {totalfares}</span>
                                     </td>
                                     <td class="py-2 px-4 border-b border-b-gray-50">
                                         <span class="inline-block p-1 rounded bg-emerald-500/10 text-emerald-500 font-medium text-[12px] leading-none">Pending</span>
@@ -304,7 +346,161 @@ const Dashboard = () => {
                 </div>
             </div>
         </div>
+    </div> :
+    <div className="min-h-screen bg-gray-100">
+      <div className="max-w-4xl mx-auto p-6">
+        <div className="mt-8">
+            <section className="bg-white shadow-lg p-6 rounded-md mb-8">
+                <h2 className="text-2xl font-semibold text-gray-800 mb-4">Terms and Conditions</h2>
+                <p className="text-gray-600 mb-2">
+                    Welcome to <strong>ZappCab</strong>! By using our mobile application and services, you agree to comply with and be bound by these Terms and Conditions. Please read these terms carefully before booking a ride through our platform. If you do not agree to these terms, please do not use our services.
+                </p>
+                <ul className=" pl-6 text-gray-600">
+                    <li><strong>1. Services: </strong> ZappCab provides a platform that connects passengers with drivers for transportation services. ZappCab is not a transportation provider, but acts as an intermediary between passengers and drivers.</li>
+                    <li><strong>2. Eligibility: </strong> 
+                    To use the ZappCab service, you must:
+                    <ol className='list-disc list-inside pl-6'>
+                       <li>Be at least 18 years old.</li>
+                       <li>Have a valid payment method.</li>
+                       <li>Have access to a smartphone with internet connectivity.</li>
+                    </ol>
+                    </li>
+                    <li><strong>3. Account Registration:</strong> 
+                    <ol className='list-disc list-inside pl-6'>
+                       <li>You are required to create an account with ZappCab to book rides. You agree to provide accurate and complete information when registering.</li>
+                       <li>You are responsible for maintaining the confidentiality of your account and password.</li>
+                      <li>You agree to notify us immediately if you suspect any unauthorized use of your account.</li>
+                      </ol>
+                    </li>
+                    <li><strong>4. Payment:</strong> 
+                    <ol className='list-disc list-inside pl-6'>
+                   <li>By booking a ride, you agree to pay the fare for the service provided, including applicable taxes, surcharges, and tips.</li>
+                   <li>Payment will be processed through the payment method associated with your account.</li>
+                   <li>Refunds are subject to the ZappCab refund policy, which may vary depending on the circumstances.</li>
+                    </ol></li>
+                    <li>
+                        <strong>5. Ride cancellation</strong>
+                        <ol className='pl-6 list-disc list-inside'>
+                        <li>You can cancel a ride before the driver arrives, but you may be charged a cancellation fee depending on how far the driver has traveled.</li>
+
+                        <li>ZappCab reserves the right to cancel a ride at any time in cases of technical issues, emergencies, or breaches of our Terms and Conditions.</li>
+                        </ol>
+                    </li>
+                    <li>
+                        <strong>6. Driver Behaviour</strong>
+                        <ol className='pl-6 list-inside list-disc'>
+                        <li>ZappCab drivers are required to follow all applicable laws and regulations and provide a safe and professional experience for passengers.</li>
+
+                        <li className='list-disc list-inside'>
+                        If you have any concerns or complaints about a driver’s behavior, please report it through the app.</li>
+                        </ol>
+                    </li>
+                    <li>
+                        <strong>7. Passenger Conduct</strong>
+                        <ol className='list-disc list-inside pl-6'>
+                        <li>Passengers are expected to behave respectfully during the ride. Abuse, harassment, or dangerous behavior will not be tolerated.</li>
+
+                        <li>ZappCab reserves the right to suspend or terminate accounts for inappropriate behavior.</li></ol>
+                    </li>
+                    <li>
+                        <strong>8. Limitation Liability</strong>
+                        <ol className='list-disc list-inside pl-6'>
+                        <li>ZappCab will not be held liable for any damages, injuries, or losses incurred during the ride, including those resulting from delays, accidents, or actions of drivers.</li>
+
+                        <li>ZappCab’s liability is limited to the fare paid for the ride.</li></ol>
+                    </li>
+                    <li><strong>9. Privacy Policy:</strong> Your privacy is important to us. Please refer to our Privacy Policy to understand how we collect, use, and protect your personal data.</li>
+                    <li><strong>10. Modification of Terms:</strong> ZappCab reserves the right to modify these Terms and Conditions at any time. Changes will be effective when posted in the app or on our website. Continued use of the service after changes have been posted constitutes acceptance of those changes.</li>
+                </ul>
+            </section>
+            <section className="bg-white shadow-lg p-6 rounded-md mb-8">
+                <h2 className="text-2xl font-semibold text-gray-800 mb-4">Frequently Asked Questions (FAQ)</h2>
+
+                <div className="space-y-4">
+                    <div>
+                    <h3 className="text-lg font-medium text-gray-700">1. How do I book a ride with ZappCab?</h3>
+                    <p className="text-gray-600">To book a ride, simply open the ZappCab app, enter your pick-up and drop-off locations, and select your ride type. You’ll see the estimated fare and expected arrival time for your driver. Once you're ready, tap "Book Ride" to confirm your ride.</p>
+                    </div>
+
+                    <div>
+                    <h3 className="text-lg font-medium text-gray-700">2. How is the fare calculated?</h3>
+                    <p className="text-gray-600">Fares are based on several factors, including:
+                    <ol className='list-disc list-inside pl-6'>
+                    <li>The distance between your pick-up and drop-off locations.</li>
+                    <li>The time it takes to complete your journey.</li>
+                    <li>Any applicable surge pricing (e.g., during peak hours or high-demand periods).</li>
+                    </ol>The app will show you an estimated fare before confirming your ride.
+                    </p>
+                    </div>
+
+                    <div>
+                    <h3 className="text-lg font-medium text-gray-700">3. Can I cancel my ride?</h3>
+                    <p className="text-gray-600"> Yes, you can cancel your ride before the driver arrives. However, please note that cancellations made after the driver has started heading to your location may incur a cancellation fee.</p>
+                    </div>
+                    <div>
+                    <h3 className="text-lg font-medium text-gray-700">4. What payment methods are accepted?</h3>
+                    <p className="text-gray-600">ZappCab accepts the following payment methods:
+                    <ol className='list-disc list-inside pl-6'>
+                    <li>Credit or debit cards (Visa, MasterCard, etc.)</li>
+                    <li>Digital wallets (e.g., PayPal, Apple Pay, Google Pay)</li>
+                    <li>In some regions, cash payments may also be available.</li>
+                    </ol>Ensure your payment method is linked in your account settings before booking a ride.
+                    </p>
+                    </div>
+
+                    <div>
+                    <h3 className="text-lg font-medium text-gray-700">5. What if I leave something in the car?</h3>
+                    <p className="text-gray-600">If you left an item in the vehicle, please contact our support team as soon as possible through the app or by email. We’ll assist you in getting in touch with your driver to recover your lost item.</p>
+                    </div>
+
+                    <div>
+                    <h3 className="text-lg font-medium text-gray-700">6. Is ZappCab safe?</h3>
+                    <p className="text-gray-600">Yes, passenger safety is a top priority for us. Our drivers undergo background checks, and vehicles are regularly inspected. Additionally, you can share your ride details with a friend or family member for extra peace of mind. The app also has an in-app emergency button to contact local authorities in case of an emergency.</p>
+                    </div>
+
+                    <div>
+                    <h3 className="text-lg font-medium text-gray-700">7. Can I book a ride for someone else?</h3>
+                    <p className="text-gray-600">Yes! You can book a ride on behalf of another person. Just enter their pick-up location and ensure their drop-off details are correct. Make sure the driver is aware that the ride is for someone else.</p>
+                    </div>
+                    <div>
+                    <h3 className="text-lg font-medium text-gray-700">8. What happens if my driver takes a wrong route?</h3>
+                    <p className="text-gray-600">If your driver deviates from the intended route or takes a wrong turn, you can use the in-app map to check the progress of your ride. If you believe there is an issue, please report it to ZappCab support, and we will investigate the matter.</p>
+                    </div>
+                    <div>
+                    <h3 className="text-lg font-medium text-gray-700">8. How do I report a problem with my ride?</h3>
+                    <p className="text-gray-600">If you encounter any issues during your ride (e.g., poor driver behavior, vehicle problems, safety concerns), you can report it directly through the app by selecting “Help” or by reaching out to our support team via email or phone.</p>
+                    </div>
+                </div>
+            </section>
+            <section className="bg-white shadow-lg p-6 rounded-md mb-8">
+                <h2 className="text-2xl font-semibold text-gray-800 mb-4">Customer Care</h2>
+                <p className="text-gray-600 mb-2">
+                    At ZappCab, we are dedicated to providing excellent customer service. If you need assistance or have any issues with your ride, please contact our support team.
+                </p>
+                <h3 className="text-xl font-medium text-gray-700 mt-4">Contact Information</h3>
+                <ul className="list-disc pl-6 text-gray-600">
+                    <li>Email Support: <a href="mailto:support@zappcab.com" className="text-blue-500">support@zappcab.com</a></li>
+                    <li>Phone Support: <a href="tel:+18005559277" className="text-blue-500">+1-800-555-ZAPP (9277)</a></li>
+                    <li>In-App Support: Use the "Help" section in the app.</li>
+                </ul>
+                <h3 className="text-xl font-medium text-gray-700 mt-4">Operating Hours</h3>
+                <p className="text-gray-600">Our customer care team is available 24/7 to assist you with any inquiries or issues you may encounter.</p>
+                <h3 className="text-xl font-medium text-gray-700 mt-4">Common Issues</h3>
+                <ul className="list-disc pl-6 text-gray-600">
+                    <li><strong>Booking Issues:</strong>  <p >If you experience issues while booking a ride, such as incorrect fares, driver unavailability, or issues with your ride details, please contact us as soon as possible.</p></li>
+                    <li><strong>Payment Issues:</strong>  <p >If you're having trouble with payments, including overcharges, refunds, or payment method problems, our team will help resolve these issues promptly.</p></li>
+                    <li><strong>Driver or Ride Concerns:</strong>  <p >If you have any concerns or feedback regarding your driver’s behavior, the condition of the vehicle, or your overall ride experience, please let us know so we can take appropriate action.</p></li>
+                </ul>
+                <h3 className="text-xl font-medium text-gray-700 mt-4">Refund and Cancellations</h3>
+                <ul className="list-disc pl-6 text-gray-600">
+                    <li><p >Refunds will be issued based on our cancellation policy and the nature of the issue. If you cancel a ride within the specified timeframe, you may be eligible for a full or partial refund.</p></li>
+                    <li><p >If there is a dispute regarding a charge or ride experience, please reach out to our support team, and we will review the case.</p></li>
+                </ul>
+            </section>
+        </div>
+      </div>
     </div>
+    }
     </div>
   )
 }

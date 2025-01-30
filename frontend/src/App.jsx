@@ -27,7 +27,7 @@ function App() {
   }, [checkAuth])
   useEffect(() => {
     checkDriverAuth()
-  }, [checkAuth])
+  }, [checkDriverAuth])
   
 
   if((isCheckingAuth && !authUser) || (isCheckingDriverAuth && !authDriver)) 
@@ -49,8 +49,8 @@ function App() {
           <Route path='/rideComplete' element={authUser ? <RideCompletePage /> : <Navigate to='/login' /> }/>
           <Route path='/rides' element={(authUser|| authDriver) ? <RidesPage /> : <Navigate to='/login' /> }/>
           <Route path='/driver' element={authDriver ? <DriverHomePage /> : <Navigate to='/driverlogin' /> }/>
-          <Route path='/driverlogin' element={authDriver ? <Navigate to='/driver' /> : <DriverLoginPage />}/>
-          <Route path='/driversignup' element={authDriver ? <Navigate to='/driver' /> : <DriverSignupPage />}/>
+          <Route path='/driverlogin' element={authDriver ? <Navigate to='/dashboard' /> : <DriverLoginPage />}/>
+          <Route path='/driversignup' element={authDriver ? <Navigate to='/dashboard' /> : <DriverSignupPage />}/>
           <Route path='/driverprofile' element={authDriver ? <DriverProfilePage /> : <Navigate to='/driverlogin' /> }/>
           <Route path="/dashboard" element={<Dashboard />} />
           </Routes>

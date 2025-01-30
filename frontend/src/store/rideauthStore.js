@@ -59,6 +59,12 @@ export const useRideStore = create((set,get) => ({
             console.log(get().drivers);
             const filteredDrivers = get().drivers.filter((driver)=>driver.vehicle === vehicle)
             console.log(filteredDrivers);
+            set({
+              markers: filteredDrivers.map((driver) => ({
+                icon: driver.vehicle,
+                location: driver.location.coordinates
+              }))
+            });
             const select = filteredDrivers[0]
             console.log(select);
             return select

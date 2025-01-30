@@ -122,8 +122,7 @@ export const checkAuth = (req,res) => {
 
 export const getRides = async (req,res) => {
     try {
-        const rides = await Ride.find({driverId : {$in : [req.user._id]}}).populate('userId','fullName')
-        rides.populate('driverId','fullName phoneNo vehicle')
+        const rides = await Ride.find({driverId : {$in : [req.user._id]}}).populate('userId','fullName').populate('driverId','fullName phoneNo vehicle')
         res.status(200).json(rides)
         
     } catch (error) {
