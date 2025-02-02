@@ -44,6 +44,7 @@ const RideTrack = ({
                     </div>
                 </div>
                 <div className='flex gap-3 my-auto'>
+                    <a href={`tel:+91 ${driverId.phoneNo}`}>
                     <svg style={{ fill: "#080808" }} className='w-6 h-6 ' version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 508 508" xml:space="preserve" fill="#000000">
                         <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                         <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -54,6 +55,8 @@ const RideTrack = ({
                             <path style={{ fill: "#ffffff" }} d="M254,0C113.9,0,0,113.9,0,254s113.9,254,254,254s254-113.9,254-254S394.1,0,254,0z M254,479.8 C129.5,479.8,28.2,378.5,28.2,254S129.5,28.2,254,28.2S479.8,129.5,479.8,254S378.5,479.8,254,479.8z"></path>
                         </g>
                     </svg>
+                    </a>
+                    <a href={`https://wa.me/91${driverId.phoneNo}?text=Hello,%20I%20booked%20cab%20How%20time%20till%20you%20arrive?`}>
                     <svg style={{ fill: "#ffffff" }} className='w-6 h-6' version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="-64.8 -64.8 249.60 249.60" enable-background="new 0 0 120 120" xml:space="preserve" stroke="#ffffff">
                         <g id="SVGRepo_bgCarrier" stroke-width="0">
                             <rect x="-64.8" y="-64.8" width="249.60" height="249.60" rx="124.8" fill="#0a0a0a" strokewidth="0"></rect>
@@ -63,6 +66,7 @@ const RideTrack = ({
                             <path style={{ fill: "#ffffff" }} d="M60,15.166C28.611,15.166,3.166,34.343,3.166,58c0,11.58,6.107,22.079,16.015,29.789l0.016,25.699L48.9,100.012 c3.591,0.535,7.3,0.822,11.1,0.822c31.389,0,56.834-19.178,56.834-42.834C116.834,34.343,91.389,15.166,60,15.166z M36.074,67 c-4.418,0-8-3.582-8-8c0-4.418,3.582-8,8-8c4.418,0,8,3.582,8,8C44.074,63.418,40.492,67,36.074,67z M59.972,67 c-4.418,0-8-3.582-8-8c0-4.418,3.582-8,8-8s8,3.582,8,8C67.973,63.418,64.391,67,59.972,67z M83.542,67c-4.419,0-8-3.582-8-8 c0-4.418,3.581-8,8-8s8,3.582,8,8C91.542,63.418,87.961,67,83.542,67z"></path> 
                         </g>
                     </svg>
+                    </a>
                 </div>
             </div>
             <div className='divider my-2'></div>

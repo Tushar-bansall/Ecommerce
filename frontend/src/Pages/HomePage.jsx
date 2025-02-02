@@ -8,6 +8,7 @@ import {compressImage} from "../lib/compress.js"
 import RideTrack from '../Components/RideTrack.jsx';
 import { Route } from 'react-router-dom';
 import { useDriverAuthStore } from '../store/driverauthStore.js';
+import Scene from '../Components/model.jsx';
 
 
 const HomePage = () => {
@@ -224,7 +225,7 @@ const HomePage = () => {
     <LazyComponent route={route} pickupcoordinates={pickupcoordinates} destinationcoordinates={destinationcoordinates} drivercoordinates={drivercoordinates} rideConfirm={rideConfirm} rideStart={rideStart}/>
   </React.Suspense>
       {!selectedVehicle && <form className='relative z-10 text-white text-lg font-bold flex flex-col text-center items-center justify-center gap-[calc(60vh)] md:gap-[calc(70vh)]'>
-        <div className='dropdown dropdown-bottom'>
+        <div className={`dropdown dropdown-bottom (${route} ? disabled: : "") `}>
           <label className='flex items-center gap-4 h-12 md:h-18 bg-gray-900 p-1.5 md:p-3 w-fit rounded-b-2xl'>
             <svg fill="#4dcb34" className='my-auto' height="18px" width="18px" version="1.1" id="Filled_Icons" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="Location-Pin-Filled"> <path d="M12,1c-4.97,0-9,4.03-9,9c0,6.75,9,13,9,13s9-6.25,9-13C21,5.03,16.97,1,12,1z M12,13c-1.66,0-3-1.34-3-3s1.34-3,3-3 s3,1.34,3,3S13.66,13,12,13z"></path> </g> </g></svg>
             <input
@@ -257,7 +258,7 @@ const HomePage = () => {
               ))}
           </ul>
         </div>
-        <div className='dropdown dropdown-top'>
+        <div className={`dropdown dropdown-top (${route} ? disabled: : "") `}>
           <label className='flex items-center gap-4 h-12 md:h-18 bg-gray-900 p-1.5 md:p-3 w-fit rounded-t-2xl'>
             <svg fill="#e81111" className='my-auto' height="18px" width="18px" version="1.1" id="Filled_Icons" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve" stroke="#e81111"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="Location-Pin-Filled"> <path d="M12,1c-4.97,0-9,4.03-9,9c0,6.75,9,13,9,13s9-6.25,9-13C21,5.03,16.97,1,12,1z M12,13c-1.66,0-3-1.34-3-3s1.34-3,3-3 s3,1.34,3,3S13.66,13,12,13z"></path> </g> </g></svg>
                             
@@ -325,6 +326,7 @@ const HomePage = () => {
       : 
         <RateList {...distTime} function={setSelectedVehicle} />)}
         {(rideConfirm||rideStart) && <RideTrack pickup={pickup} rideStart={rideStart} destination={destination} driverId={driver} droptime={droptime} pickuptime={pickuptime}/>}
+        
     </div>
   );
 };

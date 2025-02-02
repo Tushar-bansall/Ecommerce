@@ -64,7 +64,7 @@ const Map = (props) => {
     
         return null
       }
-      let bounds
+      let bounds=null
 
       
 
@@ -108,7 +108,7 @@ const Map = (props) => {
       }, [location]);
 
   return (
-    <MapContainer className='absolute inset-0 z-0 w-full' center ={[location.latitude,location.longitude]} zoom={14} scrollWheelZoom={false}>
+    <MapContainer className='absolute inset-0 z-0 w-full transition-opacity duration-500 opacity-100 transform scale-100' center ={[location.latitude,location.longitude]} zoom={14} scrollWheelZoom={false}>
         <TileLayer url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">openstreetmap</a> contributors' />
         

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useDriverAuthStore } from '../store/driverauthStore'
 import { useRideStore } from '../store/rideauthStore'
+import Scene from '../Components/model'
 
 const Dashboard = () => {
     const {authDriver} = useDriverAuthStore()
@@ -28,8 +29,38 @@ const Dashboard = () => {
 
   return (
     <div>
-    <div class="fixed left-0 top-18 w-64 h-full bg-[#f8f4f3] p-4 sidebar-menu transition-transform">
-        
+        <label className="btn btn-circle swap swap-rotate fixed z-40 m-5 md:hidden">
+            {/* this hidden checkbox controls the state */}
+            <input 
+                onClick={()=>{
+                    if(document.getElementById('sidebardash').classList.contains('hidden'))
+                    {document.getElementById('sidebardash').classList.remove('hidden')}
+                    else {document.getElementById('sidebardash').classList.add('hidden')}
+                }} type="checkbox" />
+
+            {/* hamburger icon */}
+            <svg
+                className="swap-off fill-current"
+                xmlns="http://www.w3.org/2000/svg"
+                width="32"
+                height="32"
+                viewBox="0 0 512 512">
+                <path d="M64,384H448V341.33H64Zm0-106.67H448V234.67H64ZM64,128v42.67H448V128Z" />
+            </svg>
+
+            {/* close icon */}
+            <svg
+                className="swap-on fill-current"
+                xmlns="http://www.w3.org/2000/svg"
+                width="32"
+                height="32"
+                viewBox="0 0 512 512">
+                <polygon
+                points="400 145.49 366.51 112 256 222.51 145.49 112 112 145.49 222.51 256 112 366.51 145.49 400 256 289.49 366.51 400 400 366.51 289.49 256 400 145.49" />
+            </svg>
+        </label>
+    <div id='sidebardash' class="fixed left-0 top-18 w-64 h-full bg-[#f8f4f3] p-4 sidebar-menu transition-transform hidden md:block">
+    
         <ul class="mt-4">
             <span class="text-gray-400 font-bold">ADMIN</span>
             <li class="mb-1 group">
@@ -111,8 +142,8 @@ const Dashboard = () => {
                     </div>
 
                     <p onClick={()=>document.getElementById('my_modal_3').showModal()} class="text-[#f84525] cursor-pointer font-medium text-sm hover:text-red-800">View</p>
-                    <dialog id="my_modal_3" className="modal">
-                        <div className="modal-box bg-white">
+                    {authDriver && <dialog id="my_modal_3" className="modal">
+                        <div className="modal-box bg-white h-screen w-screen overflow-y-hidden">
                             <form method="dialog">
                             <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
                             </form>
@@ -121,6 +152,7 @@ const Dashboard = () => {
                                     <p className='text-md font-semibold text-gray-950'>{authDriver?.license}</p>
                                     <p className='text-sm font-medium text-gray-950'>{authDriver?.vehicle}</p>
                                 </div>
+                                
                                 <div className='flex flex-col'>
                                     <div className="w-24 h-24 relative">
                                             <img src={vehicleUrl} className="w-full h-full object-cover rounded-2xl" />
@@ -128,8 +160,9 @@ const Dashboard = () => {
                                     </div>
                                 </div>
                             </div>
+                            <Scene vehicle={authDriver?.vehicle}/>
                         </div>
-                    </dialog>
+                    </dialog>}
                 </div>
                 <div class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
                     <div class="flex justify-between mb-4">
