@@ -6,6 +6,7 @@ import driverRoutes from "./routes/driver.auth.route.js"
 import rideRoutes from "./routes/ride.route.js"
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
+import {app,server} from "./lib/socket.js"
 
 dotenv.config()
 
@@ -16,7 +17,6 @@ const corsOptions = {
   credentials: true,  // Allow credentials (cookies, headers)
 };
 
-const app = express()
 
 app.use(express.json({ limit: '10mb' }))
 app.use(cors(corsOptions));
@@ -26,7 +26,7 @@ app.use("/api/auth",authRoutes)
 app.use("/api/driver",driverRoutes)
 app.use("/api/ride",rideRoutes)
 
-app.listen(process.env.PORT,()=> 
+server.listen(process.env.PORT,()=> 
     {
     console.log("Server is running on port "+ process.env.PORT)
     connectDB()

@@ -103,22 +103,22 @@ const Dashboard = () => {
                 </p>
             </li>
             <span class="text-gray-400 font-bold">TERMS AND CONDITIONS</span>
-            <li class="mb-1 group">
+            <li class="mb-1 group" onClick={()=>{setShowTerms(true)}}>
                 <p class="flex cursor-pointer font-semibold items-center py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100">
                                    
-                    <span class="text-sm" onClick={()=>{setShowTerms(true)}}>Terms</span>
+                    <span class="text-sm" >Terms</span>
                    </p>
             </li>
-            <li class="mb-1 group">
+            <li class="mb-1 group" onClick={()=>{setShowTerms(true)}}>
                 <p  class="flex cursor-pointer font-semibold items-center py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100">
                                    
-                    <span class="text-sm" onClick={()=>{setShowTerms(true)}}>Customer Care</span>
+                    <span class="text-sm" >Customer Care</span>
                   </p>
             </li>
-            <li class="mb-1 group">
+            <li class="mb-1 group" onClick={()=>{setShowTerms(true)}}>
                 <p  class="flex cursor-pointer font-semibold items-center py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100">
                                    
-                    <span class="text-sm" onClick={()=>{setShowTerms(true)}}>Frequently Asked FAQs</span>
+                    <span class="text-sm" >Frequently Asked FAQs</span>
                   </p>
             </li>
         </ul>
@@ -380,7 +380,7 @@ const Dashboard = () => {
             </div>
         </div>
     </div> :
-    <div className="min-h-screen bg-gray-100">
+    <div className="w-full md:w-[calc(100%-256px)] md:ml-64 bg-gray-200 min-h-screen transition-all main">
       <div className="max-w-4xl mx-auto p-6">
         <div className="mt-8">
             <section className="bg-white shadow-lg p-6 rounded-md mb-8">

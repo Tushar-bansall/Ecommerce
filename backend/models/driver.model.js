@@ -27,8 +27,7 @@ const driverSchema = new mongoose.Schema({
         required: true
     },
     vehicle : {
-        type: String,
-        required: true
+        type: String
     },
     location : {
         type : {

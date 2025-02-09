@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import {axiosInstance } from "../lib/axios.js"
 import toast from "react-hot-toast";
+import { useRideStore } from "./rideauthStore.js";
 
 
 export const useAuthStore = create( (set,get) => ({
@@ -12,6 +13,7 @@ export const useAuthStore = create( (set,get) => ({
         try {
             const res = await axiosInstance.get("/api/auth/check");
             set({authUser: res.data})
+            useRideStore.getState().connectSocket()
         } catch (error) {
             console.log("Error in checkAuth", error.message);
         } finally {
@@ -24,6 +26,7 @@ export const useAuthStore = create( (set,get) => ({
             const res = await axiosInstance.post("/api/auth/signup",data);
             set({authUser:res.data})
             toast.success("Account Created successfully")
+            useRideStore.getState().connectSocket()
         } catch (error) {
             toast.error(error.response.data.message)
         } finally {
@@ -34,6 +37,7 @@ export const useAuthStore = create( (set,get) => ({
         try {
             await axiosInstance.post("api/auth/logout")
             set({authUser:null})
+            useRideStore.getState().disconnectSocket()
             toast.success("Logged out successfully")
         } catch (error) {
             toast.error(error.response.data.message)
@@ -44,6 +48,7 @@ export const useAuthStore = create( (set,get) => ({
         try {          
             const res = await axiosInstance.post("/api/auth/login",data)
             set({authUser:res.data})            
+            useRideStore.getState().connectSocket()
             toast.success("Logged In Successfully")
         } catch (error) {
             toast.error(error.response.data.message)

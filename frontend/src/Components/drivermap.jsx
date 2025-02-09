@@ -44,7 +44,7 @@ const DriverMap = (props) => {
         const map = useMap()
     
         useEffect(() => {
-          if (props.location.latitude && props.location.longitude) {
+          if (props.location && props.location.latitude && props.location.longitude) {
             map.setView([props.location.latitude, props.location.longitude])
           }
 
@@ -52,28 +52,32 @@ const DriverMap = (props) => {
     
         return null}
       
-      let bounds
-const FitBounds = () => {
-        if(props.rideConfirm && props.pickupcoordinates && props.location)
-        {
-          bounds = new LatLngBounds([[props.pickupcoordinates.latitude,props.pickupcoordinates.longitude], [props.location.latitude,props.location.longitude]]);
-        }else if(props.rideStart && props.destinationcoordinates && props.location)
-          {
-            bounds = new LatLngBounds([[props.destinationcoordinates.latitude,props.destinationcoordinates.longitude], [props.location.latitude,props.location.longitude]]);
-          }
-        const map = useMap();
-        useEffect(() => {
-          if(bounds)
-          {
-            map.fitBounds(bounds,{
-              padding:[30,30]
-            });
-          }
-
-        }, [map, bounds]);
-    
-        return null;
-      };
+      
+            let bounds=null
+      
+            
+      
+            const FitBounds = () => {
+              if(props.rideConfirm && props.pickupcoordinates && props.location)
+              {
+                bounds = new LatLngBounds([[props.pickupcoordinates.latitude,props.pickupcoordinates.longitude], [props.location.latitude,props.location.longitude]]);
+              }else if(props.rideStart && props.destinationcoordinates && props.location)
+                {
+                  bounds = new LatLngBounds([[props.destinationcoordinates.latitude,props.destinationcoordinates.longitude], [props.location.latitude,props.location.longitude]]);
+                }
+              const map = useMap();
+              useEffect(() => {
+                if(bounds)
+                {
+                  map.fitBounds(bounds,{
+                    padding:[30,30]
+                  });
+                }
+      
+              }, [map, bounds]);
+          
+              return null;
+            };
 
       const markersRef = useRef([]);
 
@@ -88,7 +92,7 @@ const FitBounds = () => {
       }, [props.location]);
 
   return (
-    <MapContainer className='absolute inset-0 z-0 w-full' center ={[location.latitude,location.longitude]} zoom={14} scrollWheelZoom={false}>
+    <MapContainer className='absolute inset-0 z-0 w-full' center ={[28.4750063,77.0103535]} zoom={14} scrollWheelZoom={false}>
         <TileLayer url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">openstreetmap</a> contributors' />
         
@@ -108,7 +112,7 @@ const FitBounds = () => {
             {props.destinationcoordinates && <Marker key={"-1"} position={[props.destinationcoordinates.latitude,props.destinationcoordinates.longitude]} icon={destinationIcon}>
                     
                 </Marker>}
-            {props.location && <Marker key={"-3"} position={[location.latitude,location.longitude]} icon={locationIcon}
+            {props.location && <Marker key={"-3"} position={[props.location.latitude,props.location.longitude]} icon={locationIcon}
                           ref={(el) => markersRef.current[0] = el} // Save the marker in the ref
                           >
                     

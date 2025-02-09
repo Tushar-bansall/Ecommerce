@@ -6,14 +6,13 @@ import { axiosInstance } from "../lib/axios";
 import DomToImage from 'dom-to-image';
 import {compressImage} from "../lib/compress.js"
 import RideTrack from '../Components/RideTrack.jsx';
-import { Route } from 'react-router-dom';
 import { useDriverAuthStore } from '../store/driverauthStore.js';
-import Scene from '../Components/model.jsx';
-
+import RideCompletePage from './rideCompletePage.jsx';
+import { useAuthStore } from '../store/useAuthStore.js';
 
 const HomePage = () => {
 
-  const { location,setLocation, getDrivers,bookRide, selectDriver,Payment} = useRideStore();
+  const { location,setLocation, getDrivers,bookRide, checkDriver,Payment,subscribeToDrivers,unsubscribeFromDrivers} = useRideStore();
   const {getLocation} = useDriverAuthStore()
   const [pickup, setPickup] = useState();
   const [destination, setDestination] = useState();
@@ -34,6 +33,11 @@ const HomePage = () => {
   const [pickuptime,setpickuptime] = useState(0)
   const [droptime,setdroptime] = useState(0)
   const [amt,setAmt] = useState(0)
+  
+  useEffect(()=>{
+    subscribeToDrivers()
+    return () => {unsubscribeFromDrivers()}
+  },[subscribeToDrivers,unsubscribeFromDrivers])
 
   const GetCurrentLocation = ()=>{
     navigator.geolocation.getCurrentPosition((position) => {
@@ -153,8 +157,18 @@ const HomePage = () => {
     
     try {
       console.log("Starting payment...");
-      const driver = await selectDriver(selectedVehicle.vehicle);
-        console.log("Driver selected:", driver);
+      const driver = await checkDriver({
+        pickup: pickup,
+        pickupcoordinates: pickupcoordinates,
+        destinationcoordinates: destinationcoordinates,
+        destination: destination,
+        vehicle: selectedVehicle.vehicle,
+        fare: amt,
+        user: useAuthStore.getState().authUser,
+        distance:distTime.distance,
+        time:distTime.time
+      });
+      console.log("Driver selected:", driver);
       setdriver(driver)
       if (driver) {
         // Assuming selectDriver is a synchronous function that updates state
@@ -217,13 +231,14 @@ const HomePage = () => {
     }
   }, [pickupcoordinates, destinationcoordinates]);
 
-  {rideComplete && <Route  to="/rideComplete" />}
   return (
+    <>
+    { rideComplete ? <RideCompletePage /> :(
     <div className='flex flex-col mb-20 md:mb-0 md:flex-row'>
-    <div id='map' className={`relative scroll-smooth h-[calc(72vh)] md:h-[calc(86vh)] w-[calc(96vw)]`}>
-    <React.Suspense fallback={<div>Loading...</div>}>
-    <LazyComponent route={route} pickupcoordinates={pickupcoordinates} destinationcoordinates={destinationcoordinates} drivercoordinates={drivercoordinates} rideConfirm={rideConfirm} rideStart={rideStart}/>
-  </React.Suspense>
+      <div id='map' className={`relative scroll-smooth h-[calc(72vh)] md:h-[calc(86vh)] w-[calc(96vw)]`}>
+        <React.Suspense fallback={<div>Loading...</div>}>
+          <LazyComponent route={route} pickupcoordinates={pickupcoordinates} destinationcoordinates={destinationcoordinates} drivercoordinates={drivercoordinates} rideConfirm={rideConfirm} rideStart={rideStart}/>
+        </React.Suspense>
       {!selectedVehicle && <form className='relative z-10 text-white text-lg font-bold flex flex-col text-center items-center justify-center gap-[calc(60vh)] md:gap-[calc(70vh)]'>
         <div className={`dropdown dropdown-bottom (${route} ? disabled: : "") `}>
           <label className='flex items-center gap-4 h-12 md:h-18 bg-gray-900 p-1.5 md:p-3 w-fit rounded-b-2xl'>
@@ -326,8 +341,10 @@ const HomePage = () => {
       : 
         <RateList {...distTime} function={setSelectedVehicle} />)}
         {(rideConfirm||rideStart) && <RideTrack pickup={pickup} rideStart={rideStart} destination={destination} driverId={driver} droptime={droptime} pickuptime={pickuptime}/>}
-        
-    </div>
+    
+    </div>)
+    }
+  </>
   );
 };
 

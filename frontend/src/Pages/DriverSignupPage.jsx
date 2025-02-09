@@ -40,9 +40,9 @@ const DriverSignupPage = () => {
           
           <h1 className='text-lg sm:text-2xl font-bold mt-2 text-green-900'> Create Account</h1>
         </div>
-        <form onSubmit={handleSubmit} className='w-full md:w-[calc(60vw)] grid md:grid-cols-2 gap-2 p-2'> 
+        <form onSubmit={handleSubmit} className='w-full md:w-[calc(60vw)] flex flex-col items-center  gap-4 p-2'> 
 
-        <label className="input w-full md:w-[calc(28vw)] input-bordered flex items-center gap-2">
+        <label className="input w-full md:w-[calc(30vw)] input-bordered flex items-center gap-2 ">
           <span className='label-text font-medium text-orange-500'>Full Name</span>
 
           <svg
@@ -57,7 +57,7 @@ const DriverSignupPage = () => {
             setformData({...formData,fullName:e.target.value})}         
           />
         </label>
-        <label className="input w-full md:w-[calc(28vw)] input-bordered flex items-center gap-2 ">
+        <label className="input w-full md:w-[calc(30vw)] input-bordered flex items-center gap-2 ">
           <span className='label-text font-medium text-orange-500'>Email</span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -73,8 +73,8 @@ const DriverSignupPage = () => {
             setformData({...formData,email:e.target.value})}         
           />
         </label>
-        <label className="input w-full md:w-[calc(28vw)] input-bordered flex items-center gap-2 ">
-          <span className='label-text font-medium text-orange-500'>Phone Number</span>
+        <label className="input w-full md:w-[calc(30vw)] input-bordered flex items-center gap-2 ">
+          <span className='label-text font-medium text-orange-500 text-sm'>Phone Number</span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 16 16"
@@ -89,8 +89,8 @@ const DriverSignupPage = () => {
             setformData({...formData,phoneNo:e.target.value})}         
           />
         </label>
-        <label className="input w-full md:w-[calc(28vw)] input-bordered flex items-center gap-2 ">
-          <span className='label-text font-medium text-orange-500'>license</span>
+        <label className="input w-full md:w-[calc(30vw)] input-bordered flex items-center gap-2 ">
+          <span className='label-text font-medium text-orange-500'>License number</span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 16 16"
@@ -105,21 +105,9 @@ const DriverSignupPage = () => {
             setformData({...formData,license:e.target.value})}         
           />
         </label>
-        <label className="input w-full md:w-[calc(28vw)] input-bordered flex items-center gap-2 ">
-          <span className='label-text font-medium text-orange-500'>vehicle type</span>
-          
-          <select value={formData.vehicle} className="select select-ghost w-fit" onChange = {(e) => 
-            setformData({...formData,vehicle:e.target.value})} >
-            <option disabled selected>Vehicle Type</option>
-            <option>Auto</option>
-            <option>Bike</option>
-            <option>Hatchback</option>
-            <option>Sedan</option>
-            <option>SUV</option>
-          </select>
-        </label>
-        <label className="input w-full md:w-[calc(28vw)] input-bordered flex items-center gap-2">
-          <span className='label-text font-medium text-yellow-300'>Password</span>
+        
+        <label className="input w-full md:w-[calc(30vw)] input-bordered flex items-center gap-2 ">
+          <span className='label-text font-medium text-orange-500'>Password</span>
 
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -135,7 +123,7 @@ const DriverSignupPage = () => {
             setformData({...formData,password:e.target.value})}         
           />
         </label>
-        { !isSigningUp ? <button type='submit' className="btn btn-sm sm:btn-md btn-outline btn-success w-full text-base" >SignUp</button>
+        { !isSigningUp ? <button type='submit' className="btn btn-sm sm:btn-md btn-outline btn-success w-full md:w-[calc(28vw)] text-base" >SignUp</button>
             : <button className="btn w-full"><span className="loading loading-spinner"></span>loading</button>}
       </form>
 

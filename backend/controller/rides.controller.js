@@ -5,6 +5,7 @@ import {config} from "dotenv"
 import cloudinary from "../lib/cloudinary.js";
 import Razorpay from "razorpay"
 import crypto from "crypto"
+import {io,getDriverSocketId} from "../lib/socket.js"
 
 config()
 
@@ -238,5 +239,19 @@ export const Verify = async (req, res) => {
   } catch (error) {
     res.status(500).json({message:"Internal Server Error"})
   }
+  }
+
+  export const checkDriverAvailability = (req,res) => {
+    try {
+      
+      const rideDetails = req.body
+      const driverId=req.params.id
+      const accepted=false
+      const driverSocketId = getDriverSocketId(driverId)
+      io.to(driverSocketId).emit("New Ride",rideDetails,(response)=>{accepted=response})
+      res.status(200).json({accepted : accepted})
+    } catch (error) {
+      res.status(500).json({message : "Internal Server Error"})
+    }
   }
   

@@ -1,11 +1,16 @@
 import { create } from "zustand";
 import toast from "react-hot-toast";
 import { axiosInstance } from "../lib/axios"
+import {io} from "socket.io-client"
+import { useAuthStore } from "./useAuthStore";
 
 export const useRideStore = create((set,get) => ({
     rides: [],
     drivers: [],
     markers: [],
+    socket:null,
+    onlineDrivers:[],
+    isCheckingDriver:false,
     location : {latitude: 28.4750063,longitude: 77.0103535},
     setLocation : (data) => set({location : data}),
 
@@ -17,6 +22,37 @@ export const useRideStore = create((set,get) => ({
             toast.error(error.response.data.message)
         }
     },
+    connectSocket: () => {
+        
+        if(!useAuthStore.getState().authUser || get().socket?.connected)
+            return
+
+        const socket = io(BASE_URL,{
+            query: {
+                driverId : null
+            }
+        })
+        socket.connect()
+        set({socket : socket})
+    },
+    disconnectSocket: () => {
+        if(get().socket?.connected)
+        {
+            get().socket.disconnect()
+        }
+    },
+    subscribeToDrivers: () => {
+      const socket = get().socket
+
+      socket.on("getOnlineDrivers",(data) => {
+          const drs = data.filter((driver)=>get().drivers.includes(driver))
+          set({onlineDrivers:drs})
+      });
+  },
+  unsubscribeFromDrivers: () => {
+      const socket = get().socket
+      socket.off("getOnlineDrivers")
+  },
 
     getRides: async() => {
         try {
@@ -54,23 +90,41 @@ export const useRideStore = create((set,get) => ({
             toast.error(error.response.data.message)
         }
     },
-    selectDriver : (vehicle) => {
-        try {
-            console.log(get().drivers);
-            const filteredDrivers = get().drivers.filter((driver)=>driver.vehicle === vehicle)
-            console.log(filteredDrivers);
-            set({
-              markers: filteredDrivers.map((driver) => ({
-                icon: driver.vehicle,
-                location: driver.location.coordinates
-              }))
-            });
-            const select = filteredDrivers[0]
-            console.log(select);
-            return select
-        } catch (error) {
-            toast.error(error.response.data.message)
-        }
+    checkDriver : async (data) => {
+      set({isCheckingDriver:true})
+      try {
+        let res = false;
+        let driver = null;
+        const filteredDrivers = get().onlineDrivers.filter((driver) => driver.vehicle === data.vehicle);
+        
+        if (filteredDrivers.length === 0) return null; // No available drivers
+    
+        let timeoutId = setTimeout(async () => {
+            let randomIndex;
+            
+            while (true) {
+                randomIndex = Math.floor(Math.random() * filteredDrivers.length);
+                if (randomIndex < filteredDrivers.length) break;
+            }
+    
+            driver = filteredDrivers[randomIndex];
+    
+            res = await axiosInstance.get(`/checkDriver/${driver._id}`, data).data.accepted
+    
+            if (res) {
+                clearTimeout(timeoutId); // ✅ Stop timeout when res is true
+            }
+        }, 60000);
+    
+        return driver;
+    
+    } catch (error) {
+        console.error("Error selecting driver:", error);
+        return null;
+    }
+     finally{
+        set({isCheckingDriver:false})
+      }
     },
     Payment : async (amount) => {
         return new Promise((resolve, reject) => {
@@ -106,8 +160,8 @@ export const useRideStore = create((set,get) => ({
                   }
                 },
                 prefill: {
-                  name: "Customer Name",
-                  email: "customer@example.com",
+                  name: useAuthStore.getState().authUser.fullName,
+                  email: useAuthStore.getState().authUser.email,
                   contact: "9876543210"
                 },
                 modal: {
