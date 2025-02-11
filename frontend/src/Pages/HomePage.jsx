@@ -7,7 +7,7 @@ import DomToImage from 'dom-to-image';
 import {compressImage} from "../lib/compress.js"
 import RideTrack from '../Components/RideTrack.jsx';
 import { useDriverAuthStore } from '../store/driverauthStore.js';
-import RideCompletePage from './rideCompletePage.jsx';
+import RideCompletePage from './RideCompletePage.jsx';
 import { useAuthStore } from '../store/useAuthStore.js';
 
 const HomePage = () => {
