@@ -43,7 +43,7 @@ const Navbar = () => {
             <li onClick={Driverlogout}><a href="/driverlogin">Logout</a></li>
           </ul>
         </details>
-        <Link to="/" className="px-1 btn-ghost rounded-md">ZappCab</Link>
+        <Link to="/" className="px-1 btn-ghost rounded-md text-2xl font-semibold">ZappCab</Link>
         
         <label className="flex cursor-pointer gap-4 ">
           <span className="label-text text-white font-semibold">Online</span>

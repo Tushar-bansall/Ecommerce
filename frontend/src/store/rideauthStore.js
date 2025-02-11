@@ -1,18 +1,18 @@
 import { create } from "zustand";
 import toast from "react-hot-toast";
 import { axiosInstance } from "../lib/axios"
-import {io} from "socket.io-client"
 import { useAuthStore } from "./useAuthStore";
+
+
 
 export const useRideStore = create((set,get) => ({
     rides: [],
     drivers: [],
     markers: [],
-    socket:null,
-    onlineDrivers:[],
-    isCheckingDriver:false,
+    filteredDrivers: [],
     location : {latitude: 28.4750063,longitude: 77.0103535},
     setLocation : (data) => set({location : data}),
+    setFilteredDrivers : (filteredDrivers) => set({filteredDrivers}),
 
     getDriverRides : async () => {
         try {
@@ -22,37 +22,6 @@ export const useRideStore = create((set,get) => ({
             toast.error(error.response.data.message)
         }
     },
-    connectSocket: () => {
-        
-        if(!useAuthStore.getState().authUser || get().socket?.connected)
-            return
-
-        const socket = io(BASE_URL,{
-            query: {
-                driverId : null
-            }
-        })
-        socket.connect()
-        set({socket : socket})
-    },
-    disconnectSocket: () => {
-        if(get().socket?.connected)
-        {
-            get().socket.disconnect()
-        }
-    },
-    subscribeToDrivers: () => {
-      const socket = get().socket
-
-      socket.on("getOnlineDrivers",(data) => {
-          const drs = data.filter((driver)=>get().drivers.includes(driver))
-          set({onlineDrivers:drs})
-      });
-  },
-  unsubscribeFromDrivers: () => {
-      const socket = get().socket
-      socket.off("getOnlineDrivers")
-  },
 
     getRides: async() => {
         try {
@@ -67,14 +36,12 @@ export const useRideStore = create((set,get) => ({
         try {
             const res= await axiosInstance.put("/api/ride/drivers",get().location)
             set({drivers:res.data})
-            console.log(get().drivers);
             set({
               markers: get().drivers.map((driver) => ({
                 icon: driver.vehicle,
                 location: driver.location.coordinates
               }))
             });
-            console.log(get().markers);
         } catch (error) {
             console.log(error)
         }
@@ -89,42 +56,6 @@ export const useRideStore = create((set,get) => ({
         } catch (error) {
             toast.error(error.response.data.message)
         }
-    },
-    checkDriver : async (data) => {
-      set({isCheckingDriver:true})
-      try {
-        let res = false;
-        let driver = null;
-        const filteredDrivers = get().onlineDrivers.filter((driver) => driver.vehicle === data.vehicle);
-        
-        if (filteredDrivers.length === 0) return null; // No available drivers
-    
-        let timeoutId = setTimeout(async () => {
-            let randomIndex;
-            
-            while (true) {
-                randomIndex = Math.floor(Math.random() * filteredDrivers.length);
-                if (randomIndex < filteredDrivers.length) break;
-            }
-    
-            driver = filteredDrivers[randomIndex];
-    
-            res = await axiosInstance.get(`/checkDriver/${driver._id}`, data).data.accepted
-    
-            if (res) {
-                clearTimeout(timeoutId); // ✅ Stop timeout when res is true
-            }
-        }, 60000);
-    
-        return driver;
-    
-    } catch (error) {
-        console.error("Error selecting driver:", error);
-        return null;
-    }
-     finally{
-        set({isCheckingDriver:false})
-      }
     },
     Payment : async (amount) => {
         return new Promise((resolve, reject) => {
@@ -182,6 +113,52 @@ export const useRideStore = create((set,get) => ({
               reject('Error fetching Razorpay order ID');
             });
         });
-      }
+      },
+      checkDriver: async (data) => {
+        set({ isCheckingDriver: true });
+        const { filteredDrivers } = get();
+      
+        try {
+          if (filteredDrivers.length === 0) return null; // No available filtered drivers
+      
+          // Define a helper function to handle the retry logic
+          const tryCheckDriver = async (driver) => {
+            try {
+              const response = await axiosInstance.put(`api/ride/checkDriver/${driver._id}`, data);
+              return response.data.accepted;
+            } catch (error) {
+              console.error("Error checking driver:", error);
+              return false;
+            }
+          };
+      
+          // Loop through drivers until one accepts the ride or we run out of time
+          let driver = null;
+          let accepted = false;
+          let retries = 0;
+          const maxRetries = filteredDrivers.length; // Limit retries to the number of drivers
+      
+          while (retries < maxRetries && !accepted) {
+            driver = filteredDrivers[retries];
+            accepted = await tryCheckDriver(driver); // Check if this driver accepts the ride
+            retries++;
+      
+            if (accepted) {
+              return driver; // Return the first driver who accepts
+            }
+          }
+      
+          // If no driver accepted the ride, return null
+          return null;
+      
+        } catch (error) {
+          console.error("Error in checkDriver function:", error);
+          return null;
+        } finally {
+          set({ isCheckingDriver: false });
+        }
+      },
+      
+  
       
 }))

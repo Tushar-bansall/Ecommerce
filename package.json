@@ -1,0 +1,13 @@
+{
+  "name": "zappcab",
+  "version": "1.0.0",
+  "description": "Cab booking",
+  "main": "index.js",
+  "scripts": {
+    "build" : "npm install --prefix backend && npm install --prefix frontend && npm run build --prefix frontend",
+    "start" : "npm run start --prefix backend"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

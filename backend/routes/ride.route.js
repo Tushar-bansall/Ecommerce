@@ -8,9 +8,9 @@ const router = express.Router()
 router.post("/book",protectRoute,bookRide)
 
 router.get("/rides",protectRoute,getRides)
-router.get("/checkDriver/:id",checkDriverAvailability)
+router.put("/checkDriver/:id",checkDriverAvailability)
 
-router.put("/drivers",getDrivers)
+router.put("/drivers",protectRoute,getDrivers)
 
 router.put("/route",getRoutes)
 router.put("/pickup",getPickup)

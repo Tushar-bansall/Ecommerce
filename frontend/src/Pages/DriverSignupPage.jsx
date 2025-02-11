@@ -9,7 +9,6 @@ const DriverSignupPage = () => {
     email: "",
     password: "",
     phoneNo : "",
-    vehicle : "",
     license : ""
   });
 

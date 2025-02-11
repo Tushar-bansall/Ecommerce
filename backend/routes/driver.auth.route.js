@@ -1,6 +1,6 @@
 import express from 'express'
 import { driverProtectRoute } from '../middleware/driverProtectRoute.middleware.js'
-import { signup,login,logout,checkAuth,getRides, updateLocation, getLocation } from '../controller/driver.auth.controller.js'
+import { signup,login,logout,checkAuth,getRides, updateLocation, getLocation,updateProfile } from '../controller/driver.auth.controller.js'
 
 const router = express.Router()
 
@@ -9,6 +9,7 @@ router.post('/signup',signup)
 router.post('/login',login)
 
 router.post('/logout',logout)
+router.put('/updateProfile',driverProtectRoute,updateProfile)
 
 router.get("/check",driverProtectRoute,checkAuth)
 

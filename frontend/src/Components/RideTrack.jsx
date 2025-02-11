@@ -8,25 +8,25 @@ const RideTrack = ({
     pickup = '', 
     destination = '' 
 }) => {
-    const vehicleUrl = (driverId?.vehicle==="Bike" || driverId?.vehicle==="Auto") ? `${driverId?.vehicle}.png` : `${driverId?.vehicle}.svg`
+    const vehicleUrl = (driverId?.vehicleType==="Bike" || driverId?.vehicleType==="Auto") ? `${driverId?.vehicleType}.png` : `${driverId?.vehicleType}.svg`
     console.log(vehicleUrl);
   return (
     <div className='w-full'>
-        <div className='bg-black text-white rounded-t-2xl w-full flex justify-between p-4 h-fit'>
-            <p>⏳ {rideStart ? "You will reach your destination in" : "The driver will reach in"}</p>            
+        <div className='bg-black text-white rounded-t-2xl md:rounded-t-none w-full flex justify-between p-4 h-fit'>
+            <p>⏳ {rideStart ? "You will reach your destination in" : "The driver will reach pickup location in"}</p>            
             <div className="badge badge-neutral text-xxs font-medium">{rideStart ? (droptime/60).toFixed(2)  : (pickuptime/60).toFixed(2)} Mins</div>
         </div>
-        <div className='bg-white rounded-2xl p-4 pt-2 h-fit  md:h-[calc(75vh)]'>
+        <div className='bg-white rounded-2xl md:rounded-none p-4 pt-2 h-fit  md:h-[calc(75vh)]'>
             <div className='divider mx-auto w-12'></div>
             <div className="shadow-xl rounded-2xl flex p-4 gap-3">         
                 <div className='flex-col w-full my-auto'>
-                    <p className='text-md font-semibold text-gray-950'>{driverId?.license}</p>
-                    <p className='text-sm font-medium text-gray-950'>{driverId?.vehicle}</p>
+                    <p className='text-md font-semibold text-gray-950'>{driverId?.vehicleRC}</p>
+                    <p className='text-sm font-medium text-gray-950'>{driverId?.vehicleDescription}</p>
                 </div>
                 <div className='flex flex-col'>
                     <div className="w-24 h-24 relative">
                             <img src={vehicleUrl} className="w-full h-full object-cover rounded-2xl" />
-                            <div className="badge bg-white border-0 text-gray-950 absolute bottom-1 shadow-black shadow-md left-1/3 transform -translate-x-1/2 p-0.5 text-xxs w-fit">{driverId.vehicle}</div>
+                            <div className="badge bg-white border-0 text-gray-950 absolute bottom-1 shadow-black shadow-md left-1/3 transform -translate-x-1/2 p-0.5 text-xxs w-fit">{driverId.vehicleType}</div>
                     </div>
                  </div>
             </div>

@@ -5,7 +5,7 @@ const RateList = (props) => {
       
 
   return (
-        <ul className="rounded-box bg-zinc-900 w-full md:w-[calc(40vw)] p-2 mb-14 md:mb-0">
+        <ul className="rounded-box md:rounded-none bg-zinc-900 w-full md:w-[calc(40vw)] p-2 mb-14 md:mb-0">
             <li className='cursor-pointer flex'>
                 <svg
                     onClick={()=>{document.getElementById('my_modal_1').showModal()}}
@@ -109,9 +109,10 @@ const RateList = (props) => {
                     <Scene vehicle="Hatchback"/>
                 </div>
             </dialog>
-            <div onClick={()=>props.function({
+            <div className='justify-between' onClick={()=>props.function({
                 vehicle: "Hatchback",
                 fare: (40+(props.distance*10)/1000+(props.time*2)/60).toFixed(2)
+                
             })}>
                 <img className='w-10 h-10 inline' src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAACHUlEQVR4nO3YO2tUQRjG8eMFDd4SEIOCdlYKNn4ARQU7kW0sRMXCQsVGFASxs46FiBZ+AA0oiJWVYjbYqGAqY6MShCBu8EZUSPzJkVlZl72cc3Y3ZMP8Yavzvu8zz5nZOe9MkkQikUgkEon0J1iGo3iCrzpnFmWUFtLEatzTO64shInluBsEP+EkhjLk/aXF8024iDn8xsGuD74WXAtj+oxdSUbaGamJuxRCP2Bj0gtwIYj8woGcuVmNpDP+OITf72jATQSOYD5M+7EC+ZmMhNhtmAkpJwoNuEnhPfgZCp8vWCOzkRB/PKR8w/YimvUFd9a8nRsd1MllJOTcCWnptryiqHZ1iqdCsR94iFf4YuGp4Clu4Rz2Y0sWEzswafFTwVgwmH6gB+pn4qP+5B12V43c1t9UsDU1Mq3/uflvh+lzppaKkfmlYkQ00o8zUsZerMF6HMbrHo6pXESvnZGJ9ITYoBMY6pGZiaJ6Seg4m3GoRVtT6r4PRfWm04DrLQKGWxTe0AMjwwX1RqqXC1fxJrTwM+FA1a7wYIiZq8mr/8120chgg/i0Kxn5r3msS0o7zKxTPZp0CB7k0Bsvcl5v9eebbCeeQ+9MDr3TeQoP1CSOYx/WhnVaqnn2KL2864KRdXibQe8FVuUtnh623rdYz2NZ7ri6qPcSm4sWTz9Il/E8bNPfwxs7hZXdMtFG7xnONlpykUgkEolEIsni5g/Bu4KBzabPCAAAAABJRU5ErkJggg==" alt="hatchback" />
                 <div className='inline-flex flex-col my-1 ml-5'>

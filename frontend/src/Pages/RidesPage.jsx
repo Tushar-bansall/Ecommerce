@@ -93,12 +93,12 @@ const RidesPage = () => {
                             <div className='flex-col w-full'>
                                 <div className='flex justify-between text-base text-gray-950 '>
                                     <p >{authUser ? selectedRide.driverId.fullName : selectedRide.userId.fullName}</p>
-                                    <p >{selectedRide.vehicle}</p>
+                                    <p >{selectedRide.vehicleType}</p>
                                 
                                 </div>
                                 <div className="flex text-xs">
                                     <p >{authUser ? "Driver Phone: " : "Customer"} {authUser && selectedRide.driverId.phoneNo}</p>
-                                    <p >{authUser && selectedRide.driverId.license}</p>
+                                    <p >{authUser && selectedRide.vehicleRC} {authUser && selectedRide.vehicleDescription}</p>
                                 
                                 </div>
                             </div>

@@ -1,9 +1,43 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useDriverAuthStore } from '../store/driverauthStore'
+import toast from 'react-hot-toast'
 
 const DriverProfilePage = () => {
 
-  const {authDriver,isUpdatingProfile} = useDriverAuthStore()
+  const {authDriver,isUpdatingProfile,updateProfile} = useDriverAuthStore()
+  const [vehicleType,setvehicleType] = useState(authDriver.vehicleType)
+  const [vehicleRC,setvehicleRC] = useState(authDriver.vehicleRC)
+  const [vehicleDescription,setvehicleDescription] = useState(authDriver.vehicleDescription)
+
+  const verifyDetails = () =>{
+    if(!vehicleType || !vehicleRC || !vehicleDescription)
+    {
+      toast.error("All fields are required")
+      return false
+    }
+    else {
+      const rcPattern = /^[A-Z]{2} \d{2} [A-Z]{2} \d{4}$/;
+    
+      if(!rcPattern.test(vehicleRC))
+      {
+        toast.error("Enter valid Vehicle RC number")
+        return false
+      }
+    }
+    return true
+  }
+
+  const handleSubmit = (e) =>{
+    e.preventDefault()
+    if(verifyDetails())
+    {
+      updateProfile({
+        vehicleType,
+        vehicleRC,
+        vehicleDescription
+      })
+    }
+  }
 
   return (
     <div className="flex text-center justify-center bg-slate-800 w-full max-w-4xl mx-auto pt-4">
@@ -12,7 +46,7 @@ const DriverProfilePage = () => {
       
       <div className="text-center mb-4 mt-6">
         
-        <form className="space-y-6 w-fit p-6 mx-auto">
+        <form onSubmit={handleSubmit} className="space-y-6 w-fit p-6 mx-auto">
           <label className="input input-bordered flex items-center gap-1">
             <span className="label-text font-medium text-nowrap text-slate-100">Full Name</span>
   
@@ -77,12 +111,14 @@ const DriverProfilePage = () => {
           <label className="input input-bordered flex items-center gap-4">
             <span className="label-text font-medium text-slate-100">Vehicle Type</span>
             
-            <select className="select w-fit select-sm">
-              <option selected>Bike</option>
-              <option>Auto</option>
-              <option>Hatchback</option>
-              <option>Sedan</option>
-              <option>SUV</option>
+            <select onChange={(e)=>{
+              setvehicleType(e.target.value)
+            }} value={vehicleType} className="select w-fit select-sm">
+              <option value="Bike">Bike</option>
+              <option value="Auto">Auto</option>
+              <option value="Hatchback">Hatchback</option>
+              <option value="Sedan">Sedan</option>
+              <option value="SUV">SUV</option>
             </select>
           </label>
           <label className="input input-bordered flex items-center gap-1">
@@ -91,6 +127,11 @@ const DriverProfilePage = () => {
             <input
               type="text"
               className="grow ml-2"
+              onChange={(e)=>{
+              setvehicleRC(e.target.value)
+              }} 
+              placeholder='XX 12 YY 1234'
+              value={vehicleRC} 
             />
           </label>
           <label className="input input-bordered flex items-center gap-1">
@@ -98,6 +139,11 @@ const DriverProfilePage = () => {
             
             <input
               type="text"
+              onChange={(e)=>{
+              setvehicleDescription(e.target.value)
+              }} 
+              value={vehicleDescription} 
+              placeholder='Vehicle Make Model Colour'
               className="grow ml-2"
             />
           </label>

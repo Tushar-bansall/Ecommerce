@@ -11,8 +11,8 @@ import RideCompletePage from './rideCompletePage.jsx';
 import { useAuthStore } from '../store/useAuthStore.js';
 
 const HomePage = () => {
-
-  const { location,setLocation, getDrivers,bookRide, checkDriver,Payment,subscribeToDrivers,unsubscribeFromDrivers} = useRideStore();
+  const {subscribeToDrivers,unsubscribeFromDrivers,onlineDrivers} = useAuthStore()
+  const { location,setLocation, getDrivers,bookRide, checkDriver,Payment,setFilteredDrivers,drivers} = useRideStore();
   const {getLocation} = useDriverAuthStore()
   const [pickup, setPickup] = useState();
   const [destination, setDestination] = useState();
@@ -34,10 +34,7 @@ const HomePage = () => {
   const [droptime,setdroptime] = useState(0)
   const [amt,setAmt] = useState(0)
   
-  useEffect(()=>{
-    subscribeToDrivers()
-    return () => {unsubscribeFromDrivers()}
-  },[subscribeToDrivers,unsubscribeFromDrivers])
+
 
   const GetCurrentLocation = ()=>{
     navigator.geolocation.getCurrentPosition((position) => {
@@ -157,6 +154,13 @@ const HomePage = () => {
     
     try {
       console.log("Starting payment...");
+      console.log(onlineDrivers);
+      let filteredDrivers = drivers.filter((driver)=>onlineDrivers.includes(driver._id))
+      console.log(filteredDrivers);
+      filteredDrivers = filteredDrivers.filter((driver)=>driver.vehicleType===selectedVehicle.vehicle)
+     
+      console.log(filteredDrivers);
+      setFilteredDrivers(filteredDrivers)
       const driver = await checkDriver({
         pickup: pickup,
         pickupcoordinates: pickupcoordinates,
@@ -230,6 +234,11 @@ const HomePage = () => {
       handleRoute();
     }
   }, [pickupcoordinates, destinationcoordinates]);
+
+  useEffect(()=>{
+    subscribeToDrivers()
+    return () => {unsubscribeFromDrivers()}
+  },[subscribeToDrivers,unsubscribeFromDrivers])
 
   return (
     <>

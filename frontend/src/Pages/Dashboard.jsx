@@ -149,8 +149,8 @@ const Dashboard = () => {
                             </form>
                             <div className="shadow-xl  rounded-2xl flex p-4 gap-3">         
                                 <div className='flex-col w-full my-auto'>
-                                    <p className='text-md font-semibold text-gray-950'>{authDriver?.license}</p>
-                                    <p className='text-sm font-medium text-gray-950'>{authDriver?.vehicle}</p>
+                                    <p className='text-md font-semibold text-gray-950'>{authDriver?.vehicleRC}</p>
+                                    <p className='text-sm font-medium text-gray-950'>{authDriver?.vehicleDescription}</p>
                                 </div>
                                 
                                 <div className='flex flex-col'>
@@ -160,7 +160,7 @@ const Dashboard = () => {
                                     </div>
                                 </div>
                             </div>
-                            <Scene vehicle={authDriver?.vehicle}/>
+                            <Scene vehicle={authDriver?.vehicleType}/>
                         </div>
                     </dialog>}
                 </div>

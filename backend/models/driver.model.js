@@ -26,7 +26,13 @@ const driverSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    vehicle : {
+    vehicleType : {
+        type: String
+    },
+    vehicleRC : {
+        type: String
+    },
+    vehicleDescription : {
         type: String
     },
     location : {

@@ -4,9 +4,9 @@ import { generateToken } from "../lib/token.js"
 import Ride from "../models/rides.model.js"
 
 export const signup= async (req,res)=>{
-    const {fullName,email,password,phoneNo,license,vehicle} = req.body
+    const {fullName,email,password,phoneNo,license} = req.body
     try {
-        if(!fullName || !email || !password || !phoneNo || !license || !vehicle )
+        if(!fullName || !email || !password || !phoneNo || !license )
           {  return res.status(400).json({ message : "All fields are required"})}
 
         if(password.length < 6) {
@@ -37,7 +37,6 @@ export const signup= async (req,res)=>{
             password: hashPass,
             phoneNo,
             license,
-            vehicle,
             location
         })
 
@@ -51,8 +50,7 @@ export const signup= async (req,res)=>{
                 fullName:newDriver.fullName,
                 email:newDriver.email,
                 phoneNo : newDriver.phoneNo,
-                license : newDriver.license,
-                vehicle : newDriver.vehicle
+                license : newDriver.license
             })
         }
         else{
@@ -90,8 +88,9 @@ export const login= async (req,res)=>{
             fullName:driver.fullName,
             email:driver.email,
             phoneNo : driver.phoneNo,
-            license : driver.license,
-            vehicle : driver.vehicle
+            vehicleType: driver.vehicleType,
+            vehicleRC: driver.vehicleRC,
+            vehicleDescription: driver.vehicleDescription
         })
 
     } catch (error) {
@@ -131,6 +130,7 @@ export const getRides = async (req,res) => {
     }
 }
 
+
 export const updateLocation = async (req,res) => {
     try {
         const driverId =req.user._id
@@ -158,4 +158,21 @@ export const getLocation = async (req,res) => {
         res.status(500).json({ message: "Internal Server Error "})
     }
     
+}
+
+export const updateProfile = async (req,res) => {
+    try {
+        const driverId =req.user._id
+        const {
+            vehicleType,
+            vehicleRC,
+            vehicleDescription
+          } = req.body
+
+        const newDriver = await Driver.findByIdAndUpdate(driverId,{vehicleType,vehicleRC,vehicleDescription},{new: true})
+        res.status(200).json(newDriver)
+    } catch (error) {
+        console.log("Error in updateLocation controller",error.message)
+        res.status(500).json({ message: "Internal Server Error "})
+    }
 }

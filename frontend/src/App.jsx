@@ -45,11 +45,11 @@ function App() {
           <Route path='/signup' element={authUser ? <Navigate to='/' /> : <SignupPage />}/>
           <Route path='/profile' element={authUser ? <ProfilePage /> : <Navigate to='/login' /> }/>
           <Route path='/rides' element={(authUser|| authDriver) ? <RidesPage /> : <Navigate to='/login' /> }/>
-          <Route path='/driver' element={authDriver ? <DriverHomePage /> : <Navigate to='/driverlogin' /> }/>
+          <Route path='/driver' element={authDriver ? (authDriver.vehicleType ? <DriverHomePage /> : <Navigate to='/driverprofile'/>) : <Navigate to='/driverlogin' /> }/>
           <Route path='/driverlogin' element={authDriver ? <Navigate to='/dashboard' /> : <DriverLoginPage />}/>
           <Route path='/driversignup' element={authDriver ? <Navigate to='/dashboard' /> : <DriverSignupPage />}/>
           <Route path='/driverprofile' element={authDriver ? <DriverProfilePage /> : <Navigate to='/driverlogin' /> }/>
-          <Route path="/dashboard" element={authDriver ? <Dashboard /> : <Navigate to='/driverlogin' /> } />
+          <Route path="/dashboard" element={authDriver ? (authDriver.vehicleType ? <Dashboard /> : <Navigate to='/driverprofile'/>)  : <Navigate to='/driverlogin' /> } />
           </Routes>
       <Toaster />
     </div>

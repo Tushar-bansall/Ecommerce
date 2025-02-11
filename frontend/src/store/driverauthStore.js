@@ -24,6 +24,7 @@ export const useDriverAuthStore = create( (set,get) => ({
         const socket = io(BASE_URL,{
             query: {
                 driverId : authDriver._id,
+                userId : ""
             }
         })
         socket.connect()
@@ -134,6 +135,18 @@ export const useDriverAuthStore = create( (set,get) => ({
       } catch (error) {
           toast.error(error.response.data.message)
       }
+    },
+    updateProfile : async (data) => {
+        set({isUpdatingProfile : true})
+        try {
+            const res = await axiosInstance.put('/api/driver/updateProfile',data)
+            toast.success("Profile Updated")
+            set({authDriver : res.data})
+        } catch (error) {
+            toast.error(error.response.data.message)
+        } finally {
+            set({isUpdatingProfile : false})
+        }
     }
     
 }))
