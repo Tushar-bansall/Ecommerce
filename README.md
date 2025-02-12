@@ -66,12 +66,12 @@ ZappCab is a MERN-stack online cab booking platform offering seamless ride booki
 1️⃣ **Clone the Repository**  
 ```
 git clone https://github.com/Tushar-bansall/Cab-booking.git
-cd ZappCab-MERN
+cd Cab-booking
 ```
 
 2️⃣ **Install Dependencies**  
 ```
-npm install
+npm run build
 ```
 
 3️⃣ **Set Up Environment Variables**  
@@ -90,13 +90,12 @@ NODE_ENV=development
 
 4️⃣ **Build and Run the Application**  
 ```
-npm run build
 npm run start
 ```
 
 --------------------------------------------------------------
 
 🎥 Live Demo  
-🔗 [https://zappcab.onrender.com](https://zappcab.onrender.com)  
+🔗 https://zappcab.onrender.com 
 
 🚖 Book rides, track drivers, preview vehicles in 3D, and travel conveniently with ZappCab! 🚀
