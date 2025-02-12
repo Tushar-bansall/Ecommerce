@@ -33,6 +33,8 @@ io.on("connection",(socket) => {
   if (typeof userId === "string" && userId.trim() !== "") {
       userSocketMap[userId] = socket.id;
       console.log("A user connected", socket.id);
+      
+      io.emit("getOnlineDrivers", Object.keys(driverSocketMap));
   } else {
       console.warn("Skipping userId:", userId);
   }
