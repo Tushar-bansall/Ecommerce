@@ -7,12 +7,12 @@ import DomToImage from 'dom-to-image';
 import {compressImage} from "../lib/compress.js"
 import RideTrack from '../Components/RideTrack.jsx';
 import { useDriverAuthStore } from '../store/driverauthStore.js';
-import RideCompletePage from './RideCompletePage.jsx';
+import RideCompletePage from '../Components/RideCompletePage.jsx';
 import { useAuthStore } from '../store/useAuthStore.js';
 
 const HomePage = () => {
   const {subscribeToDrivers,unsubscribeFromDrivers,onlineDrivers} = useAuthStore()
-  const { location,setLocation, getDrivers,bookRide, checkDriver,Payment,setFilteredDrivers,drivers} = useRideStore();
+  const { location,setLocation, getDrivers,bookRide, checkDriver,setFilteredDrivers,drivers} = useRideStore();
   const {getLocation} = useDriverAuthStore()
   const [pickup, setPickup] = useState();
   const [destination, setDestination] = useState();
@@ -33,8 +33,21 @@ const HomePage = () => {
   const [pickuptime,setpickuptime] = useState(0)
   const [droptime,setdroptime] = useState(0)
   const [amt,setAmt] = useState(0)
+  const [paid,setPaid] = useState(false)
   
 
+  const clear = () => {
+    setPickup("")
+    setDestination("")
+    setpickupcoordinates(null)
+    setdestinationcoordinates(null)
+    setRoute(null)
+    setdistTime(null)
+    setCoupon(null)
+    setAmt(null)
+    setCouponWrong(false)
+    setSelectedVehicle(null)
+  }
 
   const GetCurrentLocation = ()=>{
     navigator.geolocation.getCurrentPosition((position) => {
@@ -174,16 +187,9 @@ const HomePage = () => {
       });
       console.log("Driver selected:", driver);
       setdriver(driver)
-      if (driver) {
-        // Assuming selectDriver is a synchronous function that updates state
-        const res = await Payment(selectedVehicle.fare); // This should return a promise
-        console.log("Payment response:", res); // Log to verify if Payment completes correctly
-  
-  
-        if (res) {
+      if (driver){
           try {
             const mapContainer = document.getElementsByClassName('leaflet-map-pane')[0]
-            console.log("mapContainer:", mapContainer);
            
             const dataUrl = await DomToImage.toPng(mapContainer,{
               style: {
@@ -192,7 +198,6 @@ const HomePage = () => {
               }
           });
             const compressed=await compressImage(dataUrl)
-            console.log(compressed);
             await bookRide({
               pickup: pickup,
               destination: destination,
@@ -210,9 +215,7 @@ const HomePage = () => {
           } catch (canvasError) {
             console.error("Error capturing map image:", canvasError);
           }
-        } else {
-          console.log("Payment not confirmed");
-        }
+        
       } else {
         setSelectedVehicle(null);
         console.log("Driver not available");
@@ -242,13 +245,13 @@ const HomePage = () => {
 
   return (
     <>
-    { rideComplete ? <RideCompletePage /> :(
-    <div className='flex flex-col mb-20 md:mb-0 md:flex-row'>
-      <div id='map' className={`relative scroll-smooth h-[calc(72vh)] md:h-[calc(86vh)] w-[calc(96vw)]`}>
+    { rideComplete ? <RideCompletePage paid={paid} /> :(
+    <div className='flex flex-col  md:flex-row'>
+      <div id='map' className={`relative scroll-smooth h-[calc(86vh)] w-[calc(100vw)]`}>
         <React.Suspense fallback={<div>Loading...</div>}>
           <LazyComponent route={route} pickupcoordinates={pickupcoordinates} destinationcoordinates={destinationcoordinates} drivercoordinates={drivercoordinates} rideConfirm={rideConfirm} rideStart={rideStart}/>
         </React.Suspense>
-      {!selectedVehicle && <form className='relative z-10 text-white text-lg font-bold flex flex-col text-center items-center justify-center gap-[calc(60vh)] md:gap-[calc(70vh)]'>
+      {!selectedVehicle && <form className='relative z-10 text-white text-lg font-bold flex flex-col text-center items-center justify-center gap-[calc(70vh)]'>
         <div className={`dropdown dropdown-bottom (${route} ? disabled: : "") `}>
           <label className='flex items-center gap-4 h-12 md:h-18 bg-gray-900 p-1.5 md:p-3 w-fit rounded-b-2xl'>
             <svg fill="#4dcb34" className='my-auto' height="18px" width="18px" version="1.1" id="Filled_Icons" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="Location-Pin-Filled"> <path d="M12,1c-4.97,0-9,4.03-9,9c0,6.75,9,13,9,13s9-6.25,9-13C21,5.03,16.97,1,12,1z M12,13c-1.66,0-3-1.34-3-3s1.34-3,3-3 s3,1.34,3,3S13.66,13,12,13z"></path> </g> </g></svg>
@@ -321,7 +324,8 @@ const HomePage = () => {
     {(route && !rideConfirm ) && (selectedVehicle 
       ? 
         <form onSubmit={handleBooking} className='rounded-box bg-zinc-900 w-full md:w-[calc(40vw)] p-6 flex flex-col gap-7 mb-14 md:mb-0'>
-          
+          <svg fill="#FFFFFF" onClick={clear} className='absolute top-17 cursor-pointer right-4 w-5 h-5' version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 492 492" xml:space="preserve" stroke="#FFFFFF"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <g> <path d="M198.608,246.104L382.664,62.04c5.068-5.056,7.856-11.816,7.856-19.024c0-7.212-2.788-13.968-7.856-19.032l-16.128-16.12 C361.476,2.792,354.712,0,347.504,0s-13.964,2.792-19.028,7.864L109.328,227.008c-5.084,5.08-7.868,11.868-7.848,19.084 c-0.02,7.248,2.76,14.028,7.848,19.112l218.944,218.932c5.064,5.072,11.82,7.864,19.032,7.864c7.208,0,13.964-2.792,19.032-7.864 l16.124-16.12c10.492-10.492,10.492-27.572,0-38.06L198.608,246.104z"></path> </g> </g> </g></svg>
+            
           <label className="input input-bor
           dered flex items-center gap-3 text-emerald-400">
             Pickup
@@ -337,7 +341,7 @@ const HomePage = () => {
           </label>
           <label className="input input-bordered flex items-center gap-3">
             Fare
-            <input type="text" value={amt || selectedVehicle.fare} className='disabled:' />
+            <input type="text" value={'₹' + amt } className='disabled:' />
           </label>
           <label className="input input-bordered flex items-center gap-3 " >
             Coupon
@@ -348,8 +352,8 @@ const HomePage = () => {
           
         </form>
       : 
-        <RateList {...distTime} function={setSelectedVehicle} />)}
-        {(rideConfirm||rideStart) && <RideTrack pickup={pickup} rideStart={rideStart} destination={destination} driverId={driver} droptime={droptime} pickuptime={pickuptime}/>}
+        <RateList clear={clear} setAmt={setAmt} {...distTime} function={setSelectedVehicle} />)}
+        {(rideConfirm||rideStart) && <RideTrack paid={paid} setPaid={setPaid} amt={amt} pickup={pickup} rideStart={rideStart} destination={destination} driverId={driver} droptime={droptime} pickuptime={pickuptime}/>}
     
     </div>)
     }

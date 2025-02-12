@@ -32,7 +32,7 @@ const DriverSignupPage = () => {
   }
 
   return (
-    <div className='flex h-[calc(100vh-10rem)] sm:h-[calc(100vh-5rem)] bg-white'>
+    <div className='flex h-[calc(100vh-5rem)] bg-white'>
     {/* left side */}
       <div className='flex flex-col justify-center items-center w-[calc(62vw)]'>
         <div className='text-center mb-3 flex flex-col items-center group gap-4'>

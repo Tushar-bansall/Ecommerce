@@ -1,6 +1,9 @@
 import React, { useEffect } from 'react'
 import { useAuthStore } from '../store/useAuthStore.js'
 import {Link} from 'react-router-dom'
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
+
+
 
 const LoginPage = () => {
   
@@ -33,7 +36,7 @@ const LoginPage = () => {
   }
 
   return (
-    <div className=' grid md:grid-cols-2  h-[calc(100vh-10rem)] sm:h-[calc(100vh-5rem)] bg-white'>
+    <div className=' grid md:grid-cols-2  h-[calc(100vh-5rem)] bg-white'>
     {/* left side */}
       <div className='flex flex-col gap-4 justify-center items-center'>
         <div className='w-full max-w-md text-center mb-5 flex flex-col items-center group gap-4'>
@@ -98,8 +101,12 @@ const LoginPage = () => {
           data-size="large"
           data-logo_alignment="left"></div>
       </div>
-      <iframe className=' h-[calc(84vh)] w-[calc(50vw)] hidden md:block' src="https://lottie.host/embed/920bb5a6-365b-47c9-9e3f-385e7e694bea/RGL4l45n4j.lottie"></iframe>
-    
+      <DotLottieReact
+      src="https://lottie.host/920bb5a6-365b-47c9-9e3f-385e7e694bea/RGL4l45n4j.lottie"
+      className='hidden md:block'
+      loop
+      autoplay
+    />
       </div>
 
   )

@@ -7,7 +7,7 @@ const ProfilePage = () => {
 
 
   return (
-    <div className=" flex items-center justify-center h-[calc(100vh-10rem)] sm:h-[calc(100vh-5rem)]">
+    <div className=" flex items-center justify-center h-[calc(100vh-5rem)]">
     <div className="text-center bg-slate-800 w-full max-w-4xl mx-auto pt-4">
       <div>
         <h2 className=" text-lg md:text-2xl font-bold text-slate-100">Profile</h2>

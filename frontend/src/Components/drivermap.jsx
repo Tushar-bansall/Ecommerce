@@ -28,6 +28,12 @@ const destinationIcon= L.icon({
     popupAnchor: [1,-34],
 })
 
+
+const link = (data) =>{
+  if(data==="Bike" || data==="Auto") return (data + ".png")
+    return (data + ".svg")
+}
+
 const locationIcon= L.icon({
     iconUrl: 'location.png',
     iconSize: [25,41],
@@ -79,17 +85,6 @@ const DriverMap = (props) => {
               return null;
             };
 
-      const markersRef = useRef([]);
-
-      useEffect(() => {
-        // After markers are rendered, add the blinking class to all marker icons
-        markersRef.current.forEach((marker) => {
-          const iconElement = marker.getElement();
-          if (iconElement) {
-            iconElement.classList.add('blinking-icon'); // Add blinking class
-          }
-        });
-      }, [props.location]);
 
   return (
     <MapContainer className='absolute inset-0 z-0 w-full' center ={[28.4750063,77.0103535]} zoom={14} scrollWheelZoom={false}>
@@ -112,9 +107,15 @@ const DriverMap = (props) => {
             {props.destinationcoordinates && <Marker key={"-1"} position={[props.destinationcoordinates.latitude,props.destinationcoordinates.longitude]} icon={destinationIcon}>
                     
                 </Marker>}
-            {props.location && <Marker key={"-3"} position={[props.location.latitude,props.location.longitude]} icon={locationIcon}
-                          ref={(el) => markersRef.current[0] = el} // Save the marker in the ref
-                          >
+            {props.location && <Marker key={"-3"} position={[props.location.latitude,props.location.longitude]} 
+              icon={props.type ? 
+              L.icon({
+                  iconUrl: link(props.type),
+                  iconSize: [25,41],
+                  iconAnchor: [12,41],
+                  popupAnchor: [1,-34],
+                  
+              }) : locationIcon}>
                     
                     </Marker>
                     }

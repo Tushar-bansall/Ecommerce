@@ -142,7 +142,7 @@ export const getPickup = async (req, res) => {
   
     try {
       // Fetch the routing data from Geoapify API
-      const response = await fetch(`https://api.geoapify.com/v1/geocode/autocomplete?text=${pickup}&filter=countrycode:auto&format=json&apiKey=${process.env.SECOND_API_KEY}`,
+      const response = await fetch(`https://api.geoapify.com/v1/geocode/autocomplete?text=${pickup}&filter=countrycode:in&format=json&apiKey=${process.env.SECOND_API_KEY}`,
       {
         method: 'GET',
       })
@@ -179,7 +179,7 @@ export const getDestination = async (req, res) => {
   
     try {
       // Fetch the routing data from Geoapify API
-      const response = await fetch(`https://api.geoapify.com/v1/geocode/autocomplete?text=${Destination}&filter=countrycode:auto&format=json&apiKey=${process.env.SECOND_API_KEY}`,
+      const response = await fetch(`https://api.geoapify.com/v1/geocode/autocomplete?text=${Destination}&filter=countrycode:in&format=json&apiKey=${process.env.SECOND_API_KEY}`,
       {
         method: 'GET',
       })

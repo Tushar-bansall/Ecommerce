@@ -8,6 +8,7 @@
     "build": "vite build"
   },
   "dependencies": {
+    "@lottiefiles/dotlottie-react": "^0.13.0",
     "@react-three/drei": "^9.121.4",
     "@react-three/fiber": "^8.17.14",
     "axios": "^1.7.9",

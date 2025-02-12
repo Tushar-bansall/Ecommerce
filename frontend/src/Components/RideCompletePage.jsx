@@ -2,8 +2,11 @@ import React,{useEffect} from 'react'
 import { useRideStore } from '../store/rideauthStore'
 import {format} from 'date-fns'
 import { Link } from 'react-router-dom'
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
-const RideCompletePage = () => {
+
+
+const RideCompletePage = (props) => {
     const {rides,getRides} = useRideStore()
     
     useEffect(()=>{
@@ -17,7 +20,7 @@ const RideCompletePage = () => {
   const vehicleUrl = (ride?.vehicle==="Bike" || ride?.vehicle==="Auto") ? "vehicle.png" : "vehicle.svg"
   
   return (
-    <div className=' grid md:grid-cols-2  h-[calc(100vh-10rem)] sm:h-[calc(100vh-5rem)]'>
+    <div className=' grid md:grid-cols-2  h-[calc(100vh-5rem)]'>
         <div className='flex-col bg-white w-full overflow-y-auto scrollbar-thin scrollbar-thumb-blue-400 scrollbar-track-gray-100'>
             <div className='flex w-full justify-between p-4'>
                 <Link to="/">
@@ -44,9 +47,9 @@ const RideCompletePage = () => {
             </div>
             <p className=' text-lg font-bold text-center items-center text-gray-950'>{ride?.driverId.fullName}</p>
             <div className='flex justify-center '>
-                <p className='text-xs font-normal text-gray-950'>{ride?.driverId.license}</p>
+                <p className='text-xs font-normal text-gray-950'>{ride?.driverId.vehicleRC}</p>
                 <svg className='w-3 h-3 my-auto' viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <circle cx="12.5" cy="12.5" r="1.5" fill="#121923" stroke="#121923" stroke-width="1.2"></circle> </g></svg>
-                <p className='text-xs font-normal text-gray-950'>{ride?.driverId.vehicle}</p>    
+                <p className='text-xs font-normal text-gray-950'>{ride?.driverId.vehicleDescription}</p>    
             </div>
             <div className='w-full flex justify-between px-4 py-1'>
                 <p className='text-xs text-gray-950 font-semibold'>Trip Completed</p>
@@ -89,7 +92,7 @@ const RideCompletePage = () => {
                 <div className='divider m-0'></div>
                 <div className='flex justify-between'>
                     <p className='text-xs text-gray-950 font-medium'>Payment Method</p>
-                    <p className='text-xs font-medium'>e-Payment</p>
+                    <p className='text-xs font-medium'>{props.paid ? "e-Payment" : "Pay Cash to the driver"}</p>
                 </div>
                 <div className='flex justify-between'>
                     <p className='text-xs text-gray-950 font-medium'>Fare</p>
@@ -111,7 +114,11 @@ const RideCompletePage = () => {
             </div>
 
         </div>
-        <iframe className=' h-[calc(84vh)] w-[calc(50vw)] hidden md:block' src="https://lottie.host/embed/94ed1879-f474-43e2-bb4c-7c34c4d4bbfd/wtIWQuUHEG.lottie"></iframe>
+        <DotLottieReact
+      src="https://lottie.host/879c4d16-0d2d-425c-8cc1-ab96ba8d370f/kO29bxnldN.lottie"
+      loop
+      autoplay
+    />
     </div>
   )
 }

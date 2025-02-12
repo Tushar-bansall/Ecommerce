@@ -7,7 +7,7 @@ import DriverRideTrack from '../Components/DriverRideTrack';
 
 const DriverHomePage = () => {
   
-  const {updateLocation,subscribeToRides,unsubscribeFromRides,currentRide,setCurrentRide,newRides} = useDriverAuthStore()
+  const {authDriver,updateLocation,subscribeToRides,unsubscribeFromRides,currentRide,setCurrentRide,newRides} = useDriverAuthStore()
   const [location,setLocation] =useState(null)
   const pickupcoordinates= currentRide?.pickupcoordinates
   const destinationcoordinates= currentRide?.destinationcoordinates
@@ -82,10 +82,10 @@ const GetCurrentLocation = () => {
     
   
   return (
-    <div className='flex flex-col mb-20 md:mb-0 md:flex-row '>
+    <div className='flex flex-col md:flex-row '>
       <div className='relative scroll-smooth h-[calc(72vh)] md:h-[calc(86vh)] w-screen'>
         <React.Suspense fallback={<div>Loading...</div>}>
-          <LazyComponent location={location} route={route} pickupcoordinates={pickupcoordinates} destinationcoordinates={destinationcoordinates}  rideConfirm={rideConfirm} rideStart={rideStart}/>
+          <LazyComponent location={location} type={authDriver.vehicleType} route={route} pickupcoordinates={pickupcoordinates} destinationcoordinates={destinationcoordinates}  rideConfirm={rideConfirm} rideStart={rideStart}/>
         </React.Suspense>
       </div>
       {(!currentRide && Array.isArray(newRides) && newRides.length > 0) && 

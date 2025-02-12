@@ -1,4 +1,6 @@
 import React from 'react'
+import { useRideStore } from '../store/rideauthStore';
+import toast from 'react-hot-toast';
 
 const RideTrack = ({ 
     rideStart = false, 
@@ -6,18 +8,22 @@ const RideTrack = ({
     pickuptime = 0, 
     driverId = {}, 
     pickup = '', 
-    destination = '' 
+    destination = '',
+    amt = 0 ,
+    paid = false,
+    setPaid = ()=>{}
 }) => {
     const vehicleUrl = (driverId?.vehicleType==="Bike" || driverId?.vehicleType==="Auto") ? `${driverId?.vehicleType}.png` : `${driverId?.vehicleType}.svg`
     console.log(vehicleUrl);
+    const {Payment} = useRideStore()
   return (
     <div className='w-full'>
         <div className='bg-black text-white rounded-t-2xl md:rounded-t-none w-full flex justify-between p-4 h-fit'>
             <p>⏳ {rideStart ? "You will reach your destination in" : "The driver will reach pickup location in"}</p>            
             <div className="badge badge-neutral text-xxs font-medium">{rideStart ? (droptime/60).toFixed(2)  : (pickuptime/60).toFixed(2)} Mins</div>
         </div>
-        <div className='bg-white rounded-2xl md:rounded-none p-4 pt-2 h-fit  md:h-[calc(75vh)]'>
-            <div className='divider mx-auto w-12'></div>
+        <div className='bg-white rounded-2xl md:rounded-none p-4 pt-2 h-fit '>
+            <div className='divider mx-auto w-12 my-1'></div>
             <div className="shadow-xl rounded-2xl flex p-4 gap-3">         
                 <div className='flex-col w-full my-auto'>
                     <p className='text-md font-semibold text-gray-950'>{driverId?.vehicleRC}</p>
@@ -72,7 +78,7 @@ const RideTrack = ({
             <div className='divider my-2'></div>
             <div className=' bg-white flex '>
                 <svg className='my-auto' fill="#000000" height="80px" width="80px" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 100 100" xml:space="preserve" transform="matrix(1, 0, 0, -1, 0, 0)rotate(-45)"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="turf-destination"> <path d="M26.483,83.137c-5.401,0-9.796-4.395-9.796-9.796s4.395-9.796,9.796-9.796s9.795,4.395,9.795,9.796 S31.885,83.137,26.483,83.137z M26.483,67.545c-3.196,0-5.796,2.6-5.796,5.796s2.6,5.796,5.796,5.796s5.795-2.6,5.795-5.796 S29.679,67.545,26.483,67.545z"></path> <circle cx="73.178" cy="26.646" r="7.796"></circle> <polygon points="64.243,35.212 55.574,37.534 58.04,40 35.147,62.894 36.561,64.308 59.454,41.414 61.921,43.881 "></polygon> </g> <g id="Layer_1"> </g> </g></svg>
-                <div className='flex flex-col gap-3'>
+                <div className='flex flex-col gap-2'>
                     <div className='flex-col'>
                         <p className='text-xs'>Start Location</p>
                         <p className='text-base text-gray-950 font-medium'>{pickup}</p>
@@ -83,6 +89,24 @@ const RideTrack = ({
                     </div>
                 </div>
             </div>
+        </div>
+        <div className='flex bg-white justify-between px-2 p-1.5 border-t-2 border-gray-700 items-center'>
+            <p className=' text-black font-semibold'>₹ {amt}</p>
+            {paid ? 
+            (<button className=' btn btn-disabled btn-ghost w-[calc(20vw)]'>
+                Paid
+            </button>)
+            :
+            (<button onClick={async()=>{
+                const res = await Payment(amt)
+                if(res)
+                {
+                    setPaid(true)
+                }
+                else toast.error("Payment Failed")
+            }} className='btn btn-success btn-outline  w-[calc(20vw)]'>
+                Pay Now
+            </button>)}
         </div>
     </div>
   )
