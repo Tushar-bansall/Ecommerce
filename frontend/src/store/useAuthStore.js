@@ -13,7 +13,6 @@ export const useAuthStore = create( (set,get) => ({
     isCheckingAuth : true,
     isLoggingIn : false,
     onlineDrivers : [],
-    isCheckingDriver: false,
     socket:null,
     connectSocket: () => {
         

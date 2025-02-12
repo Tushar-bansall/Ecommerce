@@ -9,6 +9,7 @@ export const useRideStore = create((set,get) => ({
     rides: [],
     drivers: [],
     markers: [],
+    isCheckingDriver: false,
     filteredDrivers: [],
     location : {latitude: 28.4750063,longitude: 77.0103535},
     setLocation : (data) => set({location : data}),

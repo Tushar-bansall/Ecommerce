@@ -12,7 +12,7 @@ import { useAuthStore } from '../store/useAuthStore.js';
 
 const HomePage = () => {
   const {subscribeToDrivers,unsubscribeFromDrivers,onlineDrivers} = useAuthStore()
-  const { location,setLocation, getDrivers,bookRide, checkDriver,setFilteredDrivers,drivers} = useRideStore();
+  const { location,setLocation, getDrivers,bookRide, checkDriver,isCheckingDriver,setFilteredDrivers,drivers} = useRideStore();
   const {getLocation} = useDriverAuthStore()
   const [pickup, setPickup] = useState();
   const [destination, setDestination] = useState();
@@ -37,8 +37,8 @@ const HomePage = () => {
   
 
   const clear = () => {
-    setPickup("")
-    setDestination("")
+    setPickup(null)
+    setDestination(null)
     setpickupcoordinates(null)
     setdestinationcoordinates(null)
     setRoute(null)
@@ -166,13 +166,10 @@ const HomePage = () => {
     e.preventDefault();
     
     try {
-      console.log("Starting payment...");
-      console.log(onlineDrivers);
       let filteredDrivers = drivers.filter((driver)=>onlineDrivers.includes(driver._id))
-      console.log(filteredDrivers);
+     
       filteredDrivers = filteredDrivers.filter((driver)=>driver.vehicleType===selectedVehicle.vehicle)
      
-      console.log(filteredDrivers);
       setFilteredDrivers(filteredDrivers)
       const driver = await checkDriver({
         pickup: pickup,
@@ -246,8 +243,21 @@ const HomePage = () => {
   return (
     <>
     { rideComplete ? <RideCompletePage paid={paid} /> :(
-    <div className='flex flex-col  md:flex-row'>
-      <div id='map' className={`relative scroll-smooth h-[calc(86vh)] w-[calc(100vw)]`}>
+    <div className='flex flex-col  md:flex-row w-[calc(100vw)]'>
+      {isCheckingDriver 
+      ? 
+        <video
+          className="rounded-lg shadow-lg max-w-full h-auto"
+          controls
+          autoPlay
+          loop
+          muted
+        >
+          <source src="driversearch.webm" type="video/webm" />
+          Your browser does not support the video tag.
+        </video>
+      :
+      <div id='map' className={`relative scroll-smooth h-[calc(86vh)] w-full`}>
         <React.Suspense fallback={<div>Loading...</div>}>
           <LazyComponent route={route} pickupcoordinates={pickupcoordinates} destinationcoordinates={destinationcoordinates} drivercoordinates={drivercoordinates} rideConfirm={rideConfirm} rideStart={rideStart}/>
         </React.Suspense>
@@ -320,10 +330,10 @@ const HomePage = () => {
           </ul>
         </div>
       </form>}
-    </div>
+    </div>}
     {(route && !rideConfirm ) && (selectedVehicle 
       ? 
-        <form onSubmit={handleBooking} className='rounded-box bg-zinc-900 w-full md:w-[calc(40vw)] p-6 flex flex-col gap-7 mb-14 md:mb-0'>
+        <form onSubmit={handleBooking} className='rounded-box bg-zinc-900 w-full max-w-[calc(38vw)] p-6 flex flex-col gap-7 '>
           <svg fill="#FFFFFF" onClick={clear} className='absolute top-17 cursor-pointer right-4 w-5 h-5' version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 492 492" xml:space="preserve" stroke="#FFFFFF"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <g> <path d="M198.608,246.104L382.664,62.04c5.068-5.056,7.856-11.816,7.856-19.024c0-7.212-2.788-13.968-7.856-19.032l-16.128-16.12 C361.476,2.792,354.712,0,347.504,0s-13.964,2.792-19.028,7.864L109.328,227.008c-5.084,5.08-7.868,11.868-7.848,19.084 c-0.02,7.248,2.76,14.028,7.848,19.112l218.944,218.932c5.064,5.072,11.82,7.864,19.032,7.864c7.208,0,13.964-2.792,19.032-7.864 l16.124-16.12c10.492-10.492,10.492-27.572,0-38.06L198.608,246.104z"></path> </g> </g> </g></svg>
             
           <label className="input input-bor
