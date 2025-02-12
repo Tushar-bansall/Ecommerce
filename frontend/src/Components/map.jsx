@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useRef, useEffect,useState } from 'react'
 import {MapContainer,TileLayer,Marker, useMap,Polyline} from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
@@ -44,7 +44,7 @@ const link = (data) =>{
 const Map = (props) => {
   
   const {markers,location} = useRideStore()
-
+  
     
     const UpdateMapCenter = () => {
         const map = useMap()
@@ -65,7 +65,6 @@ const Map = (props) => {
         return null
       }
       let bounds=null
-
       
 
       const FitBounds = () => {
@@ -96,7 +95,7 @@ const Map = (props) => {
       };
 
       const markersRef = useRef([]);
-
+{ (!props.rideConfirm && !props.rideStart)
       useEffect(() => {
         // After markers are rendered, add the blinking class to all marker icons
         markersRef.current.forEach((marker) => {
@@ -105,9 +104,9 @@ const Map = (props) => {
             iconElement.classList.add('blinking-icon'); // Add blinking class
           }
         });
-      }, [location]);
+      }, [location]);}
 
-  return (
+      return(
     <MapContainer className='absolute inset-0 z-0 w-full transition-opacity duration-500 opacity-100 transform scale-100' center ={[location.latitude,location.longitude]} zoom={14} scrollWheelZoom={false}>
         <TileLayer url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">openstreetmap</a> contributors' />
@@ -149,8 +148,9 @@ const Map = (props) => {
                     </Marker>
                     }
         <FitBounds />
-    </MapContainer>
-  )
+    </MapContainer>)
+    
+  
 }
 
 export default Map

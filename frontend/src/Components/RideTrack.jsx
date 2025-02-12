@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useRideStore } from '../store/rideauthStore';
 import toast from 'react-hot-toast';
 
@@ -13,17 +13,19 @@ const RideTrack = ({
     paid = false,
     setPaid = ()=>{}
 }) => {
+    
+    const [paying,setPaying] = useState(false)
     const vehicleUrl = (driverId?.vehicleType==="Bike" || driverId?.vehicleType==="Auto") ? `${driverId?.vehicleType}.png` : `${driverId?.vehicleType}.svg`
     console.log(vehicleUrl);
     const {Payment} = useRideStore()
   return (
-    <div className='w-full'>
+    <div className='w-full md:max-w-[calc(40vw)] '>
         <div className='bg-black text-white rounded-t-2xl md:rounded-t-none w-full flex justify-between p-4 h-fit'>
             <p>⏳ {rideStart ? "You will reach your destination in" : "The driver will reach pickup location in"}</p>            
             <div className="badge badge-neutral text-xxs font-medium">{rideStart ? (droptime/60).toFixed(2)  : (pickuptime/60).toFixed(2)} Mins</div>
         </div>
         <div className='bg-white rounded-2xl md:rounded-none p-4 pt-2 h-fit '>
-            <div className='divider mx-auto w-12 my-1'></div>
+            <div className='divider md:hidden mx-auto w-12 my-1'></div>
             <div className="shadow-xl rounded-2xl flex p-4 gap-3">         
                 <div className='flex-col w-full my-auto'>
                     <p className='text-md font-semibold text-gray-950'>{driverId?.vehicleRC}</p>
@@ -93,20 +95,30 @@ const RideTrack = ({
         <div className='flex bg-white justify-between px-2 p-1.5 border-t-2 border-gray-700 items-center'>
             <p className=' text-black font-semibold'>₹ {amt}</p>
             {paid ? 
-            (<button className=' btn btn-disabled btn-ghost w-[calc(20vw)]'>
+            (<button className=' btn w-[calc(20vw)] text-white disabled'>
                 Paid
             </button>)
             :
-            (<button onClick={async()=>{
-                const res = await Payment(amt)
-                if(res)
-                {
-                    setPaid(true)
-                }
-                else toast.error("Payment Failed")
-            }} className='btn btn-success btn-outline  w-[calc(20vw)]'>
-                Pay Now
-            </button>)}
+            (
+                
+                    paying 
+                    ? 
+                        <button className="btn  w-[calc(20vw)]"><span className="loading loading-spinner"></span>Paying</button>
+                    :
+                        <button onClick={async()=>{
+                            setPaying(true)
+                            const res = await Payment(amt)
+                            if(res)
+                            {
+                                setPaid(true)
+                                setPaying(false)
+                            }
+                            else toast.error("Payment Failed")
+                        }} className='btn btn-success btn-outline  w-[calc(20vw)]'>
+                            Pay Now
+                        </button>
+                
+            )}
         </div>
     </div>
   )

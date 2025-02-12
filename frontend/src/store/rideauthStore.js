@@ -9,7 +9,6 @@ export const useRideStore = create((set,get) => ({
     rides: [],
     drivers: [],
     markers: [],
-    isCheckingDriver: false,
     filteredDrivers: [],
     location : {latitude: 28.4750063,longitude: 77.0103535},
     setLocation : (data) => set({location : data}),
@@ -116,7 +115,6 @@ export const useRideStore = create((set,get) => ({
         });
       },
       checkDriver: async (data) => {
-        set({ isCheckingDriver: true });
         const { filteredDrivers } = get();
       
         try {
@@ -155,8 +153,6 @@ export const useRideStore = create((set,get) => ({
         } catch (error) {
           console.error("Error in checkDriver function:", error);
           return null;
-        } finally {
-          set({ isCheckingDriver: false });
         }
       },
       
